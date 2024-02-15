@@ -32,7 +32,7 @@ wazuh:
     manager:
       enabled: true
       username: "wazuh-wui" # Do not modify this username as it may make your Wazuh installation unstable.
-      password: "MyS3cr37P450r.*-"
+      password: "MyS3cr37P450r.*-1dsfs84f"
 
 service:
   main:
@@ -115,8 +115,6 @@ workload:
             mkdir -p /tmp/wazuh/certs
             cp -r /bad-ownership-cert/* /tmp/wazuh/certs
 
-            chown -R 1000:1000 /tmp/wazuh/certs
-
             # Set UMASK so newly created file will have permissions 400
             umask 377
 
@@ -141,22 +139,11 @@ workload:
 
             openssl pkcs8 -topk8 -inform PEM -in /wazuh-indexer-certs/admin-key.pem -out /wazuh-indexer-certs/admin.key -nocrypt
 
-            chown 1000:1000 /wazuh-indexer-certs/admin.key
-
-            # Set UMASK so newly created file will have permissions 400
-            umask 077
-
             mkdir -p /tmp/wazuh/conf
             cp -r /bad-ownership-conf/* /tmp/wazuh/conf
 
-            chown -R 1000:1000 /tmp/wazuh/conf
-
-            # Set UMASK so newly created file will have permissions 400
+            # Set UMASK so newly created file will have permissions 600
             umask 177
-
-            ls -la /tmp/wazuh
-            ls -la /tmp/wazuh/conf
-            ls -la /tmp/wazuh/conf/*
 
             # Source directory
             source_dir="/tmp/wazuh/conf"
@@ -171,6 +158,8 @@ workload:
 
               find "${source_dir}/${service}" -type f -exec sh -c 'cat "$0" > "/wazuh-${1}-conf/$(basename "$0")"' {} "$service" \;
             done
+
+            chown -R 1000:1000 /wazuh-*
 
             echo "Indexer:" && \
             echo "    Cert:" && \
@@ -315,39 +304,42 @@ workload:
 
             # Function to check if port 9200 is open
             check_port() {
-                (echo >/dev/tcp/localhost/9200) >/dev/null 2>&1
+                (echo >/dev/tcp/localhost/9200) >/dev/null 2>&1 && return 0 || return 1
             }
 
             # Wait for port 9200 to become available
             counter=0
-            while ! check_port; do
+            while [ $counter -lt 300 ]; do
                 sleep 1
                 counter=$((counter+1))
-                if [ $counter -ge 300 ]; then
-                    echo "Timeout: Port 9200 not open after 5 minutes."
-                    exit 1
+                if check_port; then
+                    export INSTALLATION_DIR=/usr/share/wazuh-indexer
+                    CACERT=$INSTALLATION_DIR/certs/root-ca.pem
+                    KEY=$INSTALLATION_DIR/certs/admin.key
+                    CERT=$INSTALLATION_DIR/certs/admin.pem
+                    export JAVA_HOME=/usr/share/wazuh-indexer/jdk
+
+                    chmod +x /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh
+                    /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh \
+                    -f /usr/share/wazuh-indexer/opensearch-security/internal_users.yml \
+                    -t internalusers \
+                    -icl \
+                    -nhnv \
+                    -cacert $CACERT \
+                    -cert $CERT \
+                    -key $KEY \
+                    -p 9200
+
+                    # Bring the output of entrypoint.sh to the foreground
+                    fg 1
+                    break
                 fi
             done
 
-            export INSTALLATION_DIR=/usr/share/wazuh-indexer
-            CACERT=$INSTALLATION_DIR/certs/root-ca.pem
-            KEY=$INSTALLATION_DIR/certs/admin.key
-            CERT=$INSTALLATION_DIR/certs/admin.pem
-            export JAVA_HOME=/usr/share/wazuh-indexer/jdk
-
-            chmod +x /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh
-            /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh \
-            -f /usr/share/wazuh-indexer/opensearch-security/internal_users.yml \
-            -t internalusers \
-            -icl \
-            -nhnv \
-            -cacert $CACERT \
-            -cert $CERT \
-            -key $KEY \
-            -p 9200
-
-            # Bring the output of entrypoint.sh to the foreground
-            fg 1
+            if [ $counter -eq 300 ]; then
+                echo "Timeout: Port 9200 not open after 5 minutes."
+                echo "The change of login/password cannot take effect."
+            fi
           env:
             OPENSEARCH_JAVA_OPTS: -Xms1024m -Xmx1024m
             INDEXER_PASSWORD: "{{ .Values.wazuh.outposts.indexer.password }}"
@@ -458,25 +450,13 @@ persistence:
       manager:
         codeserver:
           mountPath: "/var/lib/wazuh-indexer"
-  # test:
-  #   enabled: true
-  #   noMount: true
-  #   type: secret
-  #   objectName: root-ca
-  #   subPath: tls.crt
-  #   defaultMode: "0400"
-  #   readOnly: false
-  #   targetSelector:
-  #     main:
-  #       change-secret-file-owner:
-  #         mountPath: /bad-ownership-cert/root-ca.pem
 
 # PVC
 # WAZUH-INDEXER
   indexer:
     enabled: true
     readOnly: false
-    defaultMode: "0600"
+    # defaultMode: "0600"
     targetSelector:
       indexer:
         indexer:
@@ -496,18 +476,6 @@ persistence:
         change-secret-file-owner:
           mountPath: /wazuh-indexer-conf
 
-  # indexer-internal-users-conf:
-  #   enabled: true
-  #   readOnly: false
-  #   noMount: true
-  #   targetSelector:
-  #     indexer:
-  #       indexer:
-  #         mountPath: /usr/share/wazuh-indexer/opensearch-security/
-  #     main:
-  #       change-secret-file-owner:
-  #         mountPath: /wazuh-indexer-conf/opensearch-security/
-
   indexer-certs:
     enabled: true
     readOnly: false
@@ -523,7 +491,7 @@ persistence:
   dashboard-config:
     enabled: true
     readOnly: false
-    defaultMode: "0600"
+    # defaultMode: "0600"
     targetSelector:
       main:
         main:
@@ -532,7 +500,7 @@ persistence:
   dashboard-custom:
     enabled: true
     readOnly: false
-    defaultMode: "0600"
+    # defaultMode: "0600"
     targetSelector:
       main:
         main:
@@ -547,17 +515,6 @@ persistence:
           mountPath: /wazuh-config
         change-secret-file-owner:
           mountPath: /wazuh-dashboard-conf
-
-  # dashboard-config-data:
-  #   enabled: true
-  #   readOnly: false
-  #   defaultMode: "0600"
-  #   targetSelector:
-  #     main:
-  #       main:
-  #         mountPath: /tmp-conf/data
-  #       change-secret-file-owner:
-  #         mountPath: /wazuh-dashboard-conf/data
 
   dashboard-certs:
     enabled: true
@@ -585,7 +542,7 @@ persistence:
   manager-api-configuration:
     enabled: true
     readOnly: false
-    defaultMode: "0600"
+    # defaultMode: "0600"
     targetSelector:
       manager:
         manager:
@@ -685,16 +642,16 @@ persistence:
         manager:
           mountPath: /var/lib/filebeat
 
-  # manager-conf:
-  #   enabled: true
-  #   readOnly: false
-  #   targetSelector:
-  #     manager:
-  #       manager:
-  #         mountPath: /wazuh-config-mount/etc/
-  #     main:
-  #       change-secret-file-owner:
-  #         mountPath: /wazuh-manager-conf
+  manager-conf:
+    enabled: true
+    readOnly: false
+    targetSelector:
+      manager:
+        manager:
+          mountPath: /wazuh-config-mount/etc/
+      main:
+        change-secret-file-owner:
+          mountPath: /wazuh-manager-conf
 
 # SECRET MOUNT
 # GENERAL
@@ -757,22 +714,6 @@ persistence:
         change-secret-file-owner:
           mountPath: /bad-ownership-conf/indexer
 
-  # indexer-internal-users-conf-secret:
-  #   enabled: true
-  #   type: secret
-  #   objectName: config
-  #   subPath: internal_users.yml
-  #   defaultMode: "0600"
-  #   readOnly: false
-  #   targetSelector:
-  #       indexer:
-  #         indexer:
-  #           mountPath: /usr/share/wazuh-indexer/opensearch-security/internal_users.yml
-    # targetSelector:
-    #   main:
-    #     change-secret-file-owner:
-    #       mountPath: /bad-ownership-conf/indexer/internal_users.yml
-
 # WAZUH-DASHBOARD
   dashboard-certs-tmp:
     enabled: true
@@ -788,18 +729,6 @@ persistence:
       main:
         change-secret-file-owner:
           mountPath: /bad-ownership-cert/dashboard
-
-  # dashboard-key-tmp:
-  #   enabled: true
-  #   noMount: true
-  #   type: secret
-  #   objectName: dashboard-cert
-  #   readOnly: false
-  #   subPath: tls.key
-  #   targetSelector:
-  #     main:
-  #       change-secret-file-owner:
-  #         mountPath: /bad-ownership-cert/dashboard/wazuh-dashboard-key.pem
           
   dashboard-opensearch-conf-secret:
     enabled: true
@@ -811,30 +740,10 @@ persistence:
         path: wazuh.yml
       - key: opensearch_dashboards.yml
         path: opensearch_dashboards.yml
-    # targetSelector:
-    #     main:
-    #       main:
-    #         mountPath: /usr/share/wazuh-dashboard/config/opensearch_dashboards.yml
     targetSelector:
       main:
         change-secret-file-owner:
           mountPath: /bad-ownership-conf/dashboard
-
-  # dashboard-conf-secret:
-  #   enabled: true
-  #   type: secret
-  #   objectName: config
-  #   subPath: wazuh.yml
-  #   defaultMode: "0432"
-  #   readOnly: false
-  #   targetSelector:
-  #       main:
-  #         main:
-  #           mountPath: /usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml
-    # targetSelector:
-    #   main:
-    #     change-secret-file-owner:
-    #       mountPath: /bad-ownership-conf/dashboard/wazuh.yml
 
 # WAZUH-MANAGER
   manager-certs-tmp:
@@ -857,14 +766,10 @@ persistence:
     type: configmap
     objectName: manager
     readOnly: false
-    subPath: wazuh_manager.conf
     targetSelector:
-        manager:
-          manager:
-            mountPath: /wazuh-config-mount/etc/ossec.conf
-      # main:
-      #   change-secret-file-owner:
-      #     mountPath: /bad-ownership-conf/manager
+      main:
+        change-secret-file-owner:
+          mountPath: /bad-ownership-conf/manager
 
 # SECURITY
 securityContext:
@@ -885,16 +790,3 @@ securityContext:
 portal:
   open:
     enabled: false
-
-# addons:
-#   codeserver:
-#     enabled: true
-#     envList: []
-#     ingress:
-#       enabled: false
-#     service:
-#       loadBalancerIP: 192.168.1.12
-#       ports:
-#         codeserver:
-#           port: 80
-#       type: LoadBalancer
