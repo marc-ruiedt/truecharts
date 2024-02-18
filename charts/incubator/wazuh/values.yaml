@@ -1,3 +1,5 @@
+# ==== Images ==== #
+
 managerImage:
   repository: wazuh/wazuh-manager
   pullPolicy: IfNotPresent
@@ -14,10 +16,8 @@ alpineImage:
   repository: alpine
   tag: latest
   pullPolicy: IfNotPresent
-# codeserverImage:
-#   repository: docker.io/codercom/code-server
-#   pullPolicy: IfNotPresent
-#   tag: 4.20.1@sha256:94e705de31ca2e6d0c28fec83f004c4159c037338c485ca0b60bba7e90bde8f9
+
+# ==== Values linked to questions.yaml ==== #
 
 wazuh:
   credentials:
@@ -27,14 +27,19 @@ wazuh:
   outposts:
     indexer:
       enabled: true
+      # Only works on initial install
       username: "admin" # Do not modify this username as it may make your Wazuh installation unstable.
       password: "test"
     manager:
       enabled: true
+      # Only works on initial install
       username: "wazuh-wui" # Do not modify this username as it may make your Wazuh installation unstable.
       password: "MyS3cr37P450r.*-1dsfs84f"
 
+# ==== Workload ==== #
+
 workload:
+# ==== Wazuh Dashboard Deployment ==== #
   main:
     enabled: true
     type: Deployment
@@ -43,6 +48,7 @@ workload:
     primary: true
     podSpec:
       containers:
+# ==== Wazuh Dashboard Container ==== #
         main:
           enabled: true
           primary: true
@@ -53,6 +59,7 @@ workload:
                 name: dashboard-env
             - secretRef:
                 name: dashboard-env
+# ==== Wazuh Indexer Deployment ==== #
   indexer:
     enabled: true
     type: Deployment
@@ -60,6 +67,7 @@ workload:
     replicas: 1
     podSpec:
       containers:
+# ==== Wazuh Indexer Container ==== #
         indexer:
           enabled: true
           primary: true
@@ -68,8 +76,7 @@ workload:
           envFrom:
             - configMapRef:
                 name: indexer-env
-            - secretRef:
-                name: indexer-env
+# ==== Wazuh Manager Deployment ==== #
   manager:
     enabled: true
     type: Deployment
@@ -77,6 +84,7 @@ workload:
     replicas: 1
     podSpec:
       containers:
+# ==== Wazuh Manager Container ==== #
         manager:
           enabled: true
           primary: true
@@ -99,42 +107,15 @@ workload:
               add:
                 - SYS_CHROOT
                 - KILL
-        # codeserver:
-        #   enabled: true
-        #   primary: false
-        #   imageSelector : codeserverImage
-        #   env:
-        #     PROXY_DOMAIN: ""
-        #   args:
-        #     - --user-data-dir
-        #     - "/config/.vscode"
-        #     - --auth
-        #     - none
-        #   securityContext:
-        #     runAsUser: 0
-        #     runAsGroup: 1000
-        #     runAsNonRoot: true
-        #     readOnlyRootFilesystem: false
-        #   probes:
-        #     liveness:
-        #       enabled: false
-        #       type: tcp
-        #     readiness:
-        #       enabled: false
-        #       type: tcp
-        #     startup:
-        #       enabled: false
-        #       type: tcp
+
+# ==== Security Context ==== #
 
 securityContext:
+  privileged: false
   container:
     runAsGroup: 1000
     runAsUser: 1000
     runAsNonRoot: true
     readOnlyRootFilesystem: false
-    pod:
-      fsGroup: 1000
-
-portal:
-  open:
-    enabled: false
+  pod:
+    fsGroup: 1000

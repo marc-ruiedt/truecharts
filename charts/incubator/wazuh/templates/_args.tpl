@@ -19,13 +19,41 @@ args:
   - -c
   - |
     id
-    ls -la /wazuh-config
+
+    chmod +x /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh 
+    export JAVA_HOME=/usr/share/wazuh-indexer/jdk
+
+    cat <<EOF > /wazuh-config/internal_users.yml
+
+    ---
+    # This is the internal user database
+    # The hash value is a bcrypt hash and can be generated with plugin/tools/hash.sh
+
+    _meta:
+      type: "internalusers"
+      config_version: 2
+
+    # Define your internal users here
+
+    ## Demo users 
+
+    {{ .Values.wazuh.outposts.indexer.username }}:
+        hash: "$(echo $(bash /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh -p "{{ .Values.wazuh.outposts.indexer.password }}") | awk '{print $NF}')"
+        reserved: true
+        backend_roles:
+        - "admin"
+        description: "Default admin user"
+
+    {{ .Values.wazuh.credentials.username }}:
+        hash: "$(echo $(bash /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh -p "{{ .Values.wazuh.credentials.password }}") | awk '{print $NF}')"
+        reserved: true
+        backend_roles:
+        - "admin"
+        description: "Default admin user"
+    EOF
+
     ln -sf /wazuh-config/opensearch.yml /usr/share/wazuh-indexer/opensearch.yml
     ln -sf /wazuh-config/internal_users.yml /usr/share/wazuh-indexer/opensearch-security/internal_users.yml
-    ls -la /
-    ls -la /usr/share/
-    ls -la /usr/share/wazuh-indexer/
-    ls -la /usr/share/wazuh-indexer/opensearch-security
 
     /entrypoint.sh &
 

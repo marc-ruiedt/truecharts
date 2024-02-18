@@ -39,10 +39,6 @@ secret:
       DASHBOARD_PASSWORD: {{ .Values.wazuh.credentials.password | quote }}
       API_USERNAME: {{ .Values.wazuh.outposts.manager.username | quote }}
       API_PASSWORD: {{ .Values.wazuh.outposts.manager.password | quote }}
-  indexer-env:
-    enabled: true
-    data:
-      INDEXER_PASSWORD: {{ .Values.wazuh.outposts.indexer.password | quote }}
   manager-env:
     enabled: true
     data:

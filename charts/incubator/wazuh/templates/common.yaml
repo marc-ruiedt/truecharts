@@ -1,15 +1,67 @@
 {{/* Make sure all variables are set properly */}}
 {{- include "tc.v1.common.loader.init" . -}}
 
+{{/* ==== Core element ===== */}}
+
+{{/* Add persistence */}}
+{{- $persistence := (include "wazuh.persistence" . | fromYaml) }}
+{{- $_ := set .Values "persistence" $persistence.persistence -}}
+
+{{/* Add service */}}
+{{- $service := (include "wazuh.service" . | fromYaml) }}
+{{- $_ := set .Values "service" $service.service -}}
+
+{{/* Add portal */}}
+{{- $portal := (include "wazuh.portal" . | fromYaml) }}
+{{- $_ := set .Values "portal" $portal.portal -}}
+
+{{/* ==== ConfigMap and Secret ===== */}}
+
+{{/* Add secret */}}
 {{- $secrets := (include "wazuh.secrets" . | fromYaml) -}}
 {{- if $secrets -}}
   {{- $_ := mustMergeOverwrite .Values $secrets -}}
 {{- end -}}
 
+{{/* Add configMap */}}
 {{- $configMap := (include "wazuh.configmap" . | fromYaml) -}}
 {{- if $configMap -}}
   {{- $_ := mustMergeOverwrite .Values $configMap -}}
 {{- end -}}
+
+{{/* ==== Containers env ===== */}}
+
+{{/* Add environnement variable */}}
+{{- $configEnv := (include "wazuh.env" . | fromYaml) -}}
+{{- if $configEnv -}}
+  {{- $_ := mustMergeOverwrite .Values $configEnv -}}
+{{- end -}}
+
+{{/* ==== Containers args ===== */}}
+
+{{/* Add args to dashboard (main) containers */}}
+{{- $dashboardArgs := (include "wazuh.dashboard.args" . | fromYaml) }}
+{{- $_ := set .Values.workload.main.podSpec.containers.main "args" $dashboardArgs.args -}}
+
+{{/* Add args to indexer containers */}}
+{{- $indexerArgs := (include "wazuh.indexer.args" . | fromYaml) }}
+{{- $_ := set .Values.workload.indexer.podSpec.containers.indexer "args" $indexerArgs.args -}}
+
+{{/* ==== Containers probes ===== */}}
+
+{{/* Add dashboard probes */}}
+{{- $dashboardProbes := (include "wazuh.probes.dashboard" . | fromYaml) }}
+{{- $_ := set .Values.workload.main.podSpec.containers.main "probes" $dashboardProbes.probes -}}
+
+{{/* Add indexer probes */}}
+{{- $indexerProbes := (include "wazuh.probes.indexer" . | fromYaml) }}
+{{- $_ := set .Values.workload.indexer.podSpec.containers.indexer "probes" $indexerProbes.probes -}}
+
+{{/* Add manager probes */}}
+{{- $managerProbes := (include "wazuh.probes.manager" . | fromYaml) }}
+{{- $_ := set .Values.workload.manager.podSpec.containers.manager "probes" $managerProbes.probes -}}
+
+{{/* ==== Init containers ===== */}}
 
 {{/* Add [init perms] container to wazuh */}}
 {{- if not (get .Values.workload.main.podSpec "initContainers") -}}
@@ -26,39 +78,6 @@
 
 {{- $initCredentials := (include "wazuh.init.credentials" . | fromYaml) -}}
 {{- $_ := set .Values.workload.indexer.podSpec.initContainers "init-credentials" $initCredentials -}}
-
-{{- $configEnv := (include "wazuh.env" . | fromYaml) -}}
-{{- if $configEnv -}}
-  {{- $_ := mustMergeOverwrite .Values $configEnv -}}
-{{- end -}}
-
-{{/* Add args to dashboard (main) containers */}}
-{{- $dashboardArgs := (include "wazuh.dashboard.args" . | fromYaml) }}
-{{- $_ := set .Values.workload.main.podSpec.containers.main "args" $dashboardArgs.args -}}
-
-{{/* Add args to indexer containers */}}
-{{- $indexerArgs := (include "wazuh.indexer.args" . | fromYaml) }}
-{{- $_ := set .Values.workload.indexer.podSpec.containers.indexer "args" $indexerArgs.args -}}
-
-{{/* Add persistence */}}
-{{- $persistence := (include "wazuh.persistence" . | fromYaml) }}
-{{- $_ := set .Values "persistence" $persistence.persistence -}}
-
-{{/* Add service */}}
-{{- $service := (include "wazuh.service" . | fromYaml) }}
-{{- $_ := set .Values "service" $service.service -}}
-
-{{/* Add dashboard probes */}}
-{{- $dashboardProbes := (include "wazuh.probes.dashboard" . | fromYaml) }}
-{{- $_ := set .Values.workload.main.podSpec.containers.main "probes" $dashboardProbes.probes -}}
-
-{{/* Add indexer probes */}}
-{{- $indexerProbes := (include "wazuh.probes.indexer" . | fromYaml) }}
-{{- $_ := set .Values.workload.indexer.podSpec.containers.indexer "probes" $indexerProbes.probes -}}
-
-{{/* Add manager probes */}}
-{{- $managerProbes := (include "wazuh.probes.manager" . | fromYaml) }}
-{{- $_ := set .Values.workload.manager.podSpec.containers.manager "probes" $managerProbes.probes -}}
 
 {{/* Render the templates */}}
 {{- include "tc.v1.common.loader.apply" . -}}

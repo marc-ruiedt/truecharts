@@ -1,16 +1,9 @@
 {{- define "wazuh.init.credentials" -}}
-{{- $uid := .Values.securityContext.container.runAsUser -}}
-{{- $gid := .Values.securityContext.container.runAsGroup -}}
-{{- $fsGroup := .Values.securityContext.container.fsGroup -}}
+
 enabled: true
+primary: true
 type: install
 imageSelector: indexerImage
-securityContext:
-  runAsUser: {{ $uid }}
-  runAsGroup: {{ $gid }}
-  runAsNonRoot: true
-  readOnlyRootFilesystem: false
-  fsGroup: {{ $fsGroup }}
 command: /bin/sh
 args:
   - -c
@@ -51,4 +44,5 @@ args:
     EOF
 
     cat /wazuh-config/internal_users.yml
+
 {{- end -}}

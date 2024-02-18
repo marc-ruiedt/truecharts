@@ -1,0 +1,3118 @@
+NAME: wazuh
+LAST DEPLOYED: Sun Feb 18 18:02:52 2024
+NAMESPACE: ix-wazuh
+STATUS: deployed
+REVISION: 1
+CHART: wazuh
+VERSION: 0.0.1
+APP_VERSION: 4.7.2
+TEST SUITE: None
+USER-SUPPLIED VALUES:
+null
+
+COMPUTED VALUES:
+alpineImage:
+  pullPolicy: IfNotPresent
+  repository: alpine
+  tag: latest
+common:
+  APPURL: ""
+  TZ: UTC
+  addons:
+    codeserver:
+      args:
+      - --auth
+      - none
+      enabled: false
+      env: {}
+      envList: []
+      ingress:
+        annotations: {}
+        enabled: false
+        hosts:
+        - host: code.chart-example.local
+          paths:
+          - path: /
+            pathType: Prefix
+        labels: {}
+        tls: []
+      service:
+        enabled: true
+        ports:
+          codeserver:
+            enabled: true
+            port: 12321
+            primary: true
+            protocol: http
+        type: ClusterIP
+      targetSelector: null
+      workingDir: /
+    netshoot:
+      enabled: false
+      env: {}
+    vpn:
+      config: ""
+      configFile: ""
+      configFolder: ""
+      env: {}
+      envList: []
+      excludedNetworks_IPv4: []
+      excludedNetworks_IPv6: []
+      existingSecret: ""
+      killSwitch: true
+      openvpn:
+        password: ""
+        username: ""
+      scripts:
+        down: ""
+        up: ""
+      tailscale:
+        accept_dns: false
+        annotations: {}
+        auth_once: true
+        authkey: ""
+        daemon_extra_args: ""
+        dest_ip: ""
+        extra_args: ""
+        outbound_http_proxy_listen: ""
+        routes: ""
+        sock5_server: ""
+        userspace: true
+      targetSelector:
+      - main
+      type: disabled
+  alpineImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/alpine
+    tag: v3.19.1@sha256:ade0065e19edaa4f6903d464ee70605111a48394536deb94f31b661264704558
+  backupStorageLocation: {}
+  backupStorageLocationList: []
+  certificate: {}
+  chartContext:
+    APPURL: ""
+    podCIDR: ""
+    svcCIDR: ""
+  clickhouse:
+    creds: {}
+    enabled: false
+    existingSecret: clickhousecreds
+    manifestManager:
+      enabled: false
+  cnpg:
+    main:
+      annotations: {}
+      backups:
+        azure:
+          connectionString: ""
+          containerName: ""
+          inheritFromAzureAD: false
+          path: /
+          serviceName: blob
+          storageAccount: ""
+          storageKey: ""
+          storageSasToken: ""
+        destinationPath: ""
+        enabled: false
+        endpointURL: ""
+        google:
+          applicationCredentials: ""
+          bucket: ""
+          gkeEnvironment: false
+          path: /
+        manualBackups: []
+        provider: s3
+        retentionPolicy: 30d
+        s3:
+          accessKey: ""
+          bucket: ""
+          path: /
+          region: ""
+          secretKey: ""
+        scheduledBackups: []
+        target: ""
+      cluster:
+        annotations: {}
+        certificates: null
+        initdb: {}
+        instances: 2
+        labels: {}
+        logLevel: info
+        postgresql: null
+        primaryUpdateMethod: switchover
+        primaryUpdateStrategy: unsupervised
+        singleNode: false
+      creds: {}
+      database: app
+      enabled: false
+      forceRecovery: false
+      hibernate: false
+      labels: {}
+      mode: standalone
+      monitoring:
+        customQueries: []
+        disableDefaultQueries: false
+        enablePodMonitor: false
+      password: ""
+      pooler:
+        annotations: {}
+        createRO: false
+        instances: 2
+        labels: {}
+        poolMode: session
+      primary: true
+      recovery:
+        azure:
+          connectionString: ""
+          containerName: ""
+          inheritFromAzureAD: false
+          path: /
+          serviceName: blob
+          storageAccount: ""
+          storageKey: ""
+          storageSasToken: ""
+        backupName: ""
+        clusterName: ""
+        destinationPath: ""
+        endpointURL: ""
+        google:
+          applicationCredentials: ""
+          bucket: ""
+          gkeEnvironment: false
+          path: /
+        method: backup
+        pitrTarget:
+          time: ""
+        provider: s3
+        s3:
+          accessKey: ""
+          bucket: ""
+          path: /
+          region: ""
+          secretKey: ""
+      type: postgresql
+      user: app
+      version: legacy
+  codeserverImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/code-server
+    tag: v4.21.1@sha256:357dc45ea807df9291623890d31590a5cf33779464a25415bb412dcbc7c5bee2
+  configmap: {}
+  containerOptions:
+    NVIDIA_CAPS:
+    - all
+  deviceList: []
+  extraTpl: []
+  fallbackDefaults:
+    accessModes:
+    - ReadWriteOnce
+    persistenceType: pvc
+    probeTimeouts:
+      liveness:
+        failureThreshold: 5
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      readiness:
+        failureThreshold: 5
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 2
+        timeoutSeconds: 5
+      startup:
+        failureThreshold: 60
+        initialDelaySeconds: 10
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 2
+    probeType: http
+    pvcRetain: false
+    pvcSize: 100Gi
+    serviceProtocol: tcp
+    serviceType: ClusterIP
+    storageClass: null
+    vctSize: 100Gi
+  global:
+    annotations: {}
+    labels: {}
+    metallb:
+      addServiceAnnotations: true
+    minNodePort: 9000
+    namespace: ""
+    stopAll: false
+    traefik:
+      addServiceAnnotations: true
+      allowCorsMiddlewares:
+      - name: tc-opencors-chain
+        namespace: ""
+      enableFixedMiddlewares: true
+      fixedMiddlewares:
+      - name: chain-basic
+        namespace: ""
+  gluetunImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/gluetun
+    tag: v3.37.0@sha256:7e179e4ec360cd71aee7674553efd380da0a7049a00b2794a4d8062c458250a6
+  iXPortals: []
+  image:
+    pullPolicy: IfNotPresent
+    repository: traefik/whoami
+    tag: v1.10.1@sha256:6bebf84c091b5da4d4228bf8905436e33ca371afc6f3bd52b1682b40d76b23de
+  imagePullSecret: {}
+  imagePullSecretList: []
+  ingress:
+    main:
+      annotations: {}
+      enabled: false
+      hosts: []
+      ingressClassName: ""
+      integrations:
+        certManager:
+          certificateIssuer: ""
+          enabled: false
+        homepage:
+          description: ""
+          enabled: false
+          group: ""
+          icon: ""
+          name: ""
+          widget:
+            custom: null
+            customkv: null
+            type: ""
+            url: ""
+        traefik:
+          allowCors: false
+          enableFixedMiddlewares: true
+          enabled: true
+          entrypoints:
+          - websecure
+          forceTLS: true
+          middlewares: []
+      labels: {}
+      primary: true
+      required: false
+      tls: []
+  ixCertificates: []
+  ixExternalInterfacesConfiguration: []
+  ixExternalInterfacesConfigurationNames: []
+  ixVolumes: []
+  kubectlImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/kubectl
+    tag: latest@sha256:3b586b7c04efbc17d5c23159a425e9f3d06901c1b7cb360e327a5ec9d3338a87
+  mariadb:
+    creds: {}
+    enabled: false
+    existingSecret: mariadbcreds
+    manifestManager:
+      enabled: false
+  mariadbClientImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/db-wait-mariadb
+    tag: v1.1.0@sha256:62858b8191b662716d84840f8d9b3c86654f175686159c5267a1c860d75f398d
+  metrics:
+    main:
+      enabled: false
+      endpoints:
+      - honorLabels: false
+        interval: 5s
+        path: /
+        port: main
+        scrapeTimeout: 5s
+      primary: true
+      prometheusRule:
+        additionalgroups: null
+        enabled: false
+        groups: {}
+      selector: {}
+      type: servicemonitor
+  mongodb:
+    creds: {}
+    enabled: false
+    existingSecret: mongodbcreds
+    manifestManager:
+      enabled: false
+  mongodbClientImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/db-wait-mongodb
+    tag: v1.1.0@sha256:9268e23927c4abd9bd031ef62a8a36c58e15361cf3f617906029fa4b6f25c71c
+  namespace: ""
+  netshootImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/netshoot
+    tag: v0.12.0@sha256:5eaa1962bc601b104c8b66ecc5ab11f986f72110caa7faeacb4a47d10526bf21
+  notes:
+    custom: |
+      {{- if .Values.iXPortals }}
+      ## Connecting externally
+      You can use this Chart by opening one of the following links in your browser:
+
+      {{- range .Values.iXPortals }}
+      - {{ toYaml . }}
+      {{- end -}}
+      {{- end }}
+
+      ## Sources for {{ .Chart.Name }}
+
+      {{- range .Chart.Sources }}
+      - {{ . }}
+      {{- end -}}
+
+      {{- $link := .Chart.Annotations.docs -}}
+      {{- if not $link -}}
+        {{- $link = .Chart.Home -}}
+      {{- end }}
+
+      See more for **{{ $.Chart.Name }}** at ({{ $link }})
+    footer: |
+      ## Documentation
+      Please check out the TrueCharts documentation on:
+      https://truecharts.org
+
+      OpenSource can only exist with your help, please consider supporting TrueCharts:
+      https://truecharts.org/sponsor
+    header: |
+      # Thank you for installing {{ .Chart.Name }} by TrueCharts.
+  openvpnImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/openvpn-client
+    tag: latest@sha256:2816991021542042f34ca2448b8a8bde93e8e75ae52f53922b1ab70491788ee5
+  operator:
+    register: false
+    verify:
+      additionalOperators: []
+      enabled: true
+      failOnError: true
+  persistence:
+    devshm:
+      enabled: true
+      medium: Memory
+      mountPath: /dev/shm
+      targetSelectAll: true
+      type: emptyDir
+    shared:
+      enabled: true
+      mountPath: /shared
+      targetSelectAll: true
+      type: emptyDir
+    tmp:
+      enabled: true
+      medium: Memory
+      mountPath: /tmp
+      targetSelectAll: true
+      type: emptyDir
+    varlogs:
+      enabled: true
+      medium: Memory
+      mountPath: /var/logs
+      targetSelectAll: true
+      type: emptyDir
+    varrun:
+      enabled: true
+      medium: Memory
+      mountPath: /var/run
+      targetSelectAll: true
+      type: emptyDir
+  persistenceList: []
+  podDisruptionBudget:
+    main:
+      enabled: false
+      maxUnavailable: 1
+      minAvailable: 1
+      targetSelector: main
+  podOptions:
+    automountServiceAccountToken: false
+    defaultSpread: true
+    dnsConfig:
+      options:
+      - name: ndots
+        value: "1"
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: false
+    hostAliases: []
+    hostIPC: false
+    hostNetwork: false
+    hostPID: false
+    hostUsers: false
+    nodeSelector:
+      kubernetes.io/arch: amd64
+    priorityClassName: ""
+    restartPolicy: Always
+    runtimeClassName: ""
+    schedulerName: ""
+    shareProcessNamespace: false
+    terminationGracePeriodSeconds: 60
+    tolerations: []
+    topologySpreadConstraints: []
+  portal:
+    open:
+      enabled: false
+      override:
+        host: null
+        port: null
+        protocol: null
+      path: ""
+      targetSelector:
+        ingress: ""
+        port: ""
+        service: ""
+  postgresClientImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/db-wait-postgres
+    tag: v1.1.0@sha256:4e4e5b9f37a5d0c8d90d744de23d1857079095fbb55d2944ec91d83241f60376
+  priorityClass: {}
+  rbac: {}
+  redis:
+    creds: {}
+    enabled: false
+    manifestManager:
+      enabled: false
+    secret:
+      credentials:
+        enabled: false
+  redisClientImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/db-wait-redis
+    tag: v1.1.0@sha256:e9412891c9b6c96f11143cd88f5d19df352bf7b5570f1825f67b5e1a2ddec176
+  resources:
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+    requests:
+      cpu: 10m
+      memory: 50Mi
+  route:
+    main:
+      annotations: {}
+      enabled: false
+      hostnames: []
+      kind: HTTPRoute
+      labels: {}
+      parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: null
+        namespace: null
+        sectionName: null
+      rules:
+      - backendRefs:
+        - group: ""
+          kind: Service
+          name: null
+          namespace: null
+          port: null
+          weight: 1
+        matches:
+        - path:
+            type: PathPrefix
+            value: /
+  scaleCertificate: {}
+  scaleExternalInterface: []
+  scaleGPU: []
+  schedules: {}
+  schedulesList: []
+  scratchImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/scratch
+    tag: latest@sha256:ca043bf6090b90bb8b89512876e14d0d66e2a4549bad9bede6af58bc9f53e2f9
+  secret: {}
+  securityContext:
+    container:
+      PUID: 568
+      UMASK: "0022"
+      allowPrivilegeEscalation: false
+      capabilities:
+        add: []
+        disableS6Caps: false
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 568
+      runAsUser: 568
+      seccompProfile:
+        type: RuntimeDefault
+    pod:
+      fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
+      supplementalGroups: []
+      sysctls: []
+  service:
+    main:
+      enabled: true
+      ports:
+        main:
+          enabled: true
+          primary: true
+          protocol: http
+      primary: true
+  serviceAccount: {}
+  serviceList: []
+  solr:
+    creds: {}
+    enabled: false
+    existingSecret: solrcreds
+    manifestManager:
+      enabled: false
+    solrCores: 1
+    solrEnableAuthentication: "no"
+  storageClass: {}
+  tailscaleImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/tailscale
+    tag: v1.58.2@sha256:2297fad4cf17f80c6f7153fe3dfccd52b8ce683f631cb5e5f1af3073a89ee3ef
+  volumeSnapshotClass: {}
+  volumeSnapshotClassList: {}
+  volumeSnapshotLocation: {}
+  volumeSnapshotLocationList: []
+  volumeSnapshots: {}
+  volumeSnapshotsList: {}
+  webhook:
+    mutating:
+      enabled: false
+      type: mutating
+      webhooks: []
+    validating:
+      enabled: false
+      type: validating
+      webhooks: []
+  wgetImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/wget
+    tag: v1.0.0@sha256:2c26ff54ed4bed9e4f1a97132119ba22f75710655d08c400bcef15dc08f9e0d1
+  wireguardImage:
+    pullPolicy: IfNotPresent
+    repository: tccr.io/tccr/wireguard
+    tag: v1.0.20210914@sha256:683b8b74d64ebd07f9955147539834c2a4b60fee51d2a36fa76b9aba689601bf
+  workload:
+    main:
+      dbWait: true
+      enabled: true
+      podSpec:
+        containers:
+          main:
+            enabled: true
+            imageSelector: image
+            primary: true
+            probes:
+              liveness:
+                enabled: true
+                port: '{{ $.Values.service.main.ports.main.targetPort | default .Values.service.main.ports.main.port
+                  }}'
+                type: '{{ .Values.service.main.ports.main.protocol }}'
+              readiness:
+                enabled: true
+                port: '{{ $.Values.service.main.ports.main.targetPort | default .Values.service.main.ports.main.port
+                  }}'
+                type: '{{ .Values.service.main.ports.main.protocol }}'
+              startup:
+                enabled: true
+                port: '{{ $.Values.service.main.ports.main.targetPort | default .Values.service.main.ports.main.port
+                  }}'
+                type: tcp
+      primary: true
+      type: Deployment
+  yqImage:
+    pullPolicy: IfNotPresent
+    repository: mikefarah/yq
+    tag: 4.40.7@sha256:c597eb784a17f698410584666bb9c2b5226af3d6060ecef25b9701695cd9edb8
+dashboardImage:
+  pullPolicy: IfNotPresent
+  repository: wazuh/wazuh-dashboard
+  tag: 4.7.2@sha256:7564058b4e00b1fdb39da9faa232d99addc611dcbd04ef559df5387d4eda8740
+indexerImage:
+  pullPolicy: IfNotPresent
+  repository: wazuh/wazuh-indexer
+  tag: 4.7.2@sha256:66c3e10254bebd4eeb45d609e6db77dd5bce8cad60a11261e31aa766a2b0ed8a
+managerImage:
+  pullPolicy: IfNotPresent
+  repository: wazuh/wazuh-manager
+  tag: 4.7.2@sha256:238c2f30c4a677e57467eaac5794be579d3ca6a58e4fc7dd54d470bce267f4c0
+securityContext:
+  container:
+    readOnlyRootFilesystem: false
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+  pod:
+    fsGroup: 1000
+  privileged: false
+wazuh:
+  credentials:
+    password: test02
+    username: kibanaserver
+  outposts:
+    indexer:
+      enabled: true
+      password: test
+      username: admin
+    manager:
+      enabled: true
+      password: MyS3cr37P450r.*-1dsfs84f
+      username: wazuh-wui
+workload:
+  indexer:
+    enabled: true
+    podSpec:
+      containers:
+        indexer:
+          command: /bin/sh
+          enabled: true
+          envFrom:
+          - configMapRef:
+              name: indexer-env
+          imageSelector: indexerImage
+          primary: true
+    replicas: 1
+    strategy: RollingUpdate
+    type: Deployment
+  main:
+    enabled: true
+    podSpec:
+      containers:
+        main:
+          command: /bin/sh
+          enabled: true
+          envFrom:
+          - configMapRef:
+              name: dashboard-env
+          - secretRef:
+              name: dashboard-env
+          imageSelector: dashboardImage
+          primary: true
+    primary: true
+    replicas: 1
+    strategy: RollingUpdate
+    type: Deployment
+  manager:
+    enabled: true
+    podSpec:
+      containers:
+        manager:
+          enabled: true
+          envFrom:
+          - configMapRef:
+              name: manager-env
+          - secretRef:
+              name: manager-env
+          imageSelector: managerImage
+          primary: true
+          securityContext:
+            capabilities:
+              add:
+              - SYS_CHROOT
+              - KILL
+              drop:
+              - ALL
+            runAsUser: 0
+    replicas: 1
+    strategy: RollingUpdate
+    type: Deployment
+
+HOOKS:
+MANIFEST:
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/tls
+metadata:
+  name: wazuh-admin-cert
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDDDCCAfSgAwIBAgIQDrNjtU7V+6rkCHczuT+9EzANBgkqhkiG9w0BAQsFADAS
+    MRAwDgYDVQQDEwdyb290LWNhMB4XDTI0MDIxODE3MDI1M1oXDTM0MDIxNTE3MDI1
+    M1owEDEOMAwGA1UEAxMFYWRtaW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+    AoIBAQCyIS0H9iOV3mlD1BkNOFcQrTKVj4ghH6bcCOYCzb+oAB+oePYHpxFuowGv
+    5z16xRfBVcO8oltcvAMSOuFTWDtWrsNAVp+5GpBkycATiv3QNcDpLeH5ZdgeFUzZ
+    LZEIy8G6uM0/vCfpWurjPlqxMlqILAe2VocqY1vssQhNe6cE52VoY/aoqiAkMBmW
+    QF3Ai5WzDTv+QoiHzafedyq2SfIk0gs4PrlTkTD0qQM2jMsFbY3yxvufkFKVv3mv
+    jwwNzuaCBh44KjylMNL9ouwJ1tYjf+POrVS7HIkrrO+Itj+tsG5NVYAydQI102ul
+    SM/IWmK0+Iev/WPA094TuCFv9RRdAgMBAAGjYDBeMA4GA1UdDwEB/wQEAwIFoDAd
+    BgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAfBgNV
+    HSMEGDAWgBQvcdEOekvY9W4xDXVPfbAgJeuvDjANBgkqhkiG9w0BAQsFAAOCAQEA
+    C32aBtcFSLV32BjlW0cPB9m4jv9giZXMhaEgoFzId6tIPH7xiKVQo19m7qZuR/HG
+    4FH7dGIxhiea5bUkNMwR4/hwk3youfnklsk2Hjd3A1hzaKD4ihIcO+h5qybQix4S
+    PiC3uZ04fSWxbSl6d8nEl8iTXmKrB8jwRDqibREhdoPE+6b3jS7FCrVDOH+xX+jt
+    3pC3WaUVHlvNk/UMOIA/G8/Qil5Pbm4tIj/QpkKniyoEPEMwsk45ojjC/E0Tx86S
+    GOhfSfKee35jWWMSIiLNvC3/SvGbgQK0S+k26+xIoFktoF2U6p/h+7GHjEWN3X2c
+    gHThicO/5Um4XXxZAX/yxA==
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEAsiEtB/Yjld5pQ9QZDThXEK0ylY+IIR+m3AjmAs2/qAAfqHj2
+    B6cRbqMBr+c9esUXwVXDvKJbXLwDEjrhU1g7Vq7DQFafuRqQZMnAE4r90DXA6S3h
+    +WXYHhVM2S2RCMvBurjNP7wn6Vrq4z5asTJaiCwHtlaHKmNb7LEITXunBOdlaGP2
+    qKogJDAZlkBdwIuVsw07/kKIh82n3ncqtknyJNILOD65U5Ew9KkDNozLBW2N8sb7
+    n5BSlb95r48MDc7mggYeOCo8pTDS/aLsCdbWI3/jzq1UuxyJK6zviLY/rbBuTVWA
+    MnUCNdNrpUjPyFpitPiHr/1jwNPeE7ghb/UUXQIDAQABAoIBAQCTtEzJyEDzucwh
+    kVMAklInouZJ/A2OIdfTppFLi947aXbW1Q51hARBcGsquB1TmvC6wOoglaQaflAx
+    op9K4+O4WgvPYsTo0W0gFebujZcvOhNvhztU+S0+rLzfbRhRaduHgEu5aMTTjC8v
+    JXpAapeFSLVQbemArYkA+D8BOOJifjb8dxH04etGiHWRqbsbcrY6+jck65JJl7OL
+    u9lHoj7hPr1YV/HAG6xJzNRH8kIz+N6QF63yl0tMGWLMqFJeJfAHqkZfpcLJilgi
+    z+VrOO8ShIfBDH6UhhINp5eSDxSy7WWL8/Qm6u1zTzn6znD0KfIcwkMTn/eeftbf
+    SpkNR48lAoGBAMotg5MyMLB1FQje2qKPgZT9DoXYhbhmsv+UN0Ip2o6SKzvtmy/R
+    Fz4eHZIU3iGoO0Zqkms+lW+DhFe4NamfoR84Y7FvEedhNCgWuji0ipAD0QUNYCKj
+    HX9zh36bFkBhpE1pPGDiWpN0Rmow/Htade7O75m9tT55dYSa/cm7xlC/AoGBAOGM
+    xOTqkrRQVHwny801qBIy7bDVPYyc85vXjbGAGYb0GL9dJ9qq2wInyXM1yRasO/K+
+    AaY2UoquJrFjCbNtDS74S8nA/xv7CN2MGTAZQcR01Aq7iMoOI111ypUfgm239ly9
+    hNWtv83e/rRimP6qfPWfLEjyIYBqs8YUMmMCqEXjAoGABnjih2nJ6Tw2SixoL2AM
+    s+pN9rbxwO94t3nVMwcH+hxvyeFXYHZ/Gfv40l5cphMuophyy4AbZJB/QhehkCaO
+    D+PMPTfjCNcxxj7EA2C0NtwIavL8qt8x6IyYP9NTKQh3LAs8ZZWZdLL6NhgPXRuO
+    PvDc9rz9+lwFCRO1ICoktR0CgYEAkIIFYHleFwLkrks9CzRWg5p3qXVmIuIoPm/j
+    i5b8Q/e+p1TDBRm0ifP94L/UH5+oJQVRvzFMvyeHCN3gSEIVUUOqIxBxInc7Hd72
+    AFgeSAVmGZ4/rN1UETw32EVA5pUX1iFiqxjQK9G0tNP7HCcVOrWJxQ7FIia7Gay0
+    /7SjJWsCgYBm9yxziTR9UKw3UtsJqukMEXYZqB6Acqzhvs4BmoooY8o5g5MfMQIc
+    p82sSL8HPM+Li0jYx3iTBy6NBLeCiQDSCqDrnB4Lo4TfhIBDOPcgomnL6fPICUvB
+    9vrzsyfNRS2IQLiSb+AS+LnUqlXLAuXq7sJrNBGZIuAqTlIC9UqVaw==
+    -----END RSA PRIVATE KEY-----
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/tls
+metadata:
+  name: wazuh-dashboard-cert
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDETCCAfmgAwIBAgIRAMQKaChkpCvAn07xeuXx2oIwDQYJKoZIhvcNAQELBQAw
+    EjEQMA4GA1UEAxMHcm9vdC1jYTAeFw0yNDAyMTgxNzAyNTNaFw0zNDAyMTUxNzAy
+    NTNaMBQxEjAQBgNVBAMTCWRhc2hib2FyZDCCASIwDQYJKoZIhvcNAQEBBQADggEP
+    ADCCAQoCggEBAO10qCKcoQUGjcD8jR1wv+GVWMKul5/+huSm/1WsNZu76dY5dR3X
+    UWAu31BSJi3q8kSaOhq9xcyyxRDcf2z1W0FObUit1QnHFrCGjaCszmXhpLT92+Q0
+    sJY0Dwryhm8nT6HmeMeQhrLp7CYPFJJgLX4vz/d/FJ8G418Ah96QxOSvVOPt2qAx
+    5D+PAEqxlwA1D8bIwpx+Erg/4hNaLYU2NlidUs0dbcL5GZhoTP/jWkfQkvkdR+2C
+    SwSGmkNJC72zqhblN7lW268/seG6elHwfr+oyIw09Zub3bTnG+Zcorq3R3J50a2I
+    IN2YfLpENbivmV+d8dTVv61/KTS5b4XsjakCAwEAAaNgMF4wDgYDVR0PAQH/BAQD
+    AgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAA
+    MB8GA1UdIwQYMBaAFC9x0Q56S9j1bjENdU99sCAl668OMA0GCSqGSIb3DQEBCwUA
+    A4IBAQCTlc5MU0pkgoZxewODOgItILgqY+ZEej6ZixR6IKOOfkcbswGBUXStNenl
+    G5Lz0YEIi+5zB5McxWfxgTjuCnXwBFUpKXNe0OwazQ3du1AV4rvdVAzTKTx80BO3
+    AvaYslm6tOd/iVMIPCC+1znlv0i2H+OdhriVaVCaz97M+AdQa2yo1S1Lr16Rf5FR
+    eyN9siuJyhEqEgie1baRA0UblnSww539hfWSM5uhfZNbA0iLi2MdXfckESFJz9n3
+    YTV31l0bIwDda1kzfB6lW3k+fc4GmKtXHuDhAGfINT6FQktHWQ9QDfqloPUpFN43
+    F2K4PGWvyQvVee58gTiTVEA0iluf
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEA7XSoIpyhBQaNwPyNHXC/4ZVYwq6Xn/6G5Kb/Vaw1m7vp1jl1
+    HddRYC7fUFImLeryRJo6Gr3FzLLFENx/bPVbQU5tSK3VCccWsIaNoKzOZeGktP3b
+    5DSwljQPCvKGbydPoeZ4x5CGsunsJg8UkmAtfi/P938UnwbjXwCH3pDE5K9U4+3a
+    oDHkP48ASrGXADUPxsjCnH4SuD/iE1othTY2WJ1SzR1twvkZmGhM/+NaR9CS+R1H
+    7YJLBIaaQ0kLvbOqFuU3uVbbrz+x4bp6UfB+v6jIjDT1m5vdtOcb5lyiurdHcnnR
+    rYgg3Zh8ukQ1uK+ZX53x1NW/rX8pNLlvheyNqQIDAQABAoIBACi22OFeY8l9zy5o
+    3zVOEMh4GAkBcKQRO0XXUG57IZH7TWPa5DbipWRNhSK7gypaX4Hdw9qz8Udg26NB
+    e2POSgBPlzNgAugzR7OqznvfRWB4qQoTgPGHC0Ql1vJ0lRJX9jJ3Vvw4zq+8pi38
+    ZfWXIhXB0vHHy1xdDP1MFP/XaLsg9Gb7kW7Zw0ca0l1poMYmlo4Phv4TGEWP65ki
+    GB+BOjgz5/gWcqyjyncXMl4F2dcHsjHAa9pCsCLvfQpArkRpkIQRsp9VCmjsCjaS
+    PXZ2KNNuFgCpRrEdNUwYkMRybeopZsSKoOJRnpxlAtCRoJ3aYTcgl8ejkxfH6+gd
+    lUQiIVUCgYEA+61uKf/80EtZQHOGWW82UWRv7uq1OhgmnbDdLjiRUZp3P9E3QPJE
+    lZqdl3fQBgxxcFgYaB/qcobiXjrQNp+r400l7HDj2LVi7wwmcX2mqdBKbNwvK6g8
+    ELrV68o4JVOHeFI4Jonpod/1C1UcwE6jHD1wS0kToulnaAcSFxmuN/MCgYEA8Yiy
+    TUO1XBtwJsOCIFefP63poJqRXUrGs7IeMi4zFN7/UXmN8j20sglIFxQcWpFoFVwW
+    /q4HJh4DAffNUZKWGLhWRtErx0+mDwaYM+qlYrdN7C0Q5fx9P5AQ8MDUCe5YLiC0
+    AEa263pPPIFTQ5RPK3jA+60xqJfTx9Rtvn37RvMCgYEAm8Z4zV44qOQ6Vf4rRefk
+    AvTbo1F64n5YSHpULGuu5odpEAL65CQP91k/+aSbCWNiQ1sDoE9A2apLKm/UuDqU
+    NZhmxLYLEPMUTUmD8fMH2UunBUIzoB39L421IsCDh/bvfrXFM3VhOmRYU69WoGEL
+    7ErK2o5crRUyf90AgXPPtakCgYA9AHFH4lnjsWpZ3/b1hCvMQXhH/8HG9iPJLqtB
+    sTllhAyn3zNigwMoFAAJFCM1HJRVELUeDYXwspO/434PpB4UkDn6GModxJgEI349
+    Xn32uKUNiTRDYcmgTBp7M7hZ6cCLpebQSwvX3UQ129PTtZlpOU5EQjHQisgKKDSv
+    b9IO0QKBgQCMMmJ+OSJtWA4ggD71UNc7/ri09YhorEgKTrwgL49SUX0ZEba1IYeJ
+    gBHX/BzYlLlRM5XVh2s+dAAFWrXRwDh/gXMBeKRsTVwZS9iwTL9PHXk85KIa8mJU
+    NwwWAvM4OJK0thFnpGxepqDYQnsAlS6LCeq/152jrmVVeguxUwFqOg==
+    -----END RSA PRIVATE KEY-----
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: wazuh-dashboard-credentials
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  password: test02
+  username: kibanaserver
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: wazuh-dashboard-env
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  API_PASSWORD: MyS3cr37P450r.*-1dsfs84f
+  API_USERNAME: wazuh-wui
+  DASHBOARD_PASSWORD: test02
+  DASHBOARD_USERNAME: kibanaserver
+  INDEXER_PASSWORD: test
+  INDEXER_USERNAME: admin
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/tls
+metadata:
+  name: wazuh-filebeat-cert
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDDzCCAfegAwIBAgIQXG5iWDt3oZ4nqIxHc0psETANBgkqhkiG9w0BAQsFADAS
+    MRAwDgYDVQQDEwdyb290LWNhMB4XDTI0MDIxODE3MDI1M1oXDTM0MDIxNTE3MDI1
+    M1owEzERMA8GA1UEAxMIZmlsZWJlYXQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+    ggEKAoIBAQC0ZtT4wlT3UZVG4EGmGFwJKZ2R8ODtWcC7q96WAjQrpa9vxs3MuLcY
+    KL4GEMk48kgw4EQPgDNkGFrOoklEOtTSQtDTFPlmDRNEdvrKBZIrL/xuurJahACb
+    OU4hbJnihbDfNGPflGUsY/0/iaTAXv9UsGQKjoWmP85zUfLjrEZz62CXqHQCbdDB
+    Nt4+tbeSJ28p5hFT14p9qdhvCmtaqdDGd/kZtkpY6v/KbVXspzCKalJPQoH8yU+f
+    vYsRjJnnwRK+L00gG03iH65BUf4s6e6cogeYH6ulyqi339rsQ6xuEELBPd3SXIr3
+    osqSgjdrCuy5nh5Oz0IwLOk1VwijMbTVAgMBAAGjYDBeMA4GA1UdDwEB/wQEAwIF
+    oDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAf
+    BgNVHSMEGDAWgBQvcdEOekvY9W4xDXVPfbAgJeuvDjANBgkqhkiG9w0BAQsFAAOC
+    AQEADZoyi8kWGg2+58xTGRTx3gSqNaHvK/7rorXY+uxALMfbx3mIpV0pVIZTNipm
+    etqeYMKHpNQ2Dz7AcRfQG1x1HdvC28QXyd7uHL52oCuEZYkh1MX3Cj9/Lhi/pF0X
+    JG2L/yunzewTU6m8pEP6MBoVmcp4EzZhtQBYyiFNebOR5nMRaQFVzggT3WrvMYnq
+    xJajT310kpxPkBEKSSNFWlEnTW5TJu7v/9brVs/Cy7uPsT3Wj2ejC1YncwHB3hfK
+    OOQo8VA/XKXOyDpr2K5Zqm/CQGJq5ffFepQAaH3ro98xirz3TUCoTGUMF+zshZjG
+    zsDd/uzqtJ8IbaHW/r+KKy0aFg==
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEogIBAAKCAQEAtGbU+MJU91GVRuBBphhcCSmdkfDg7VnAu6velgI0K6Wvb8bN
+    zLi3GCi+BhDJOPJIMOBED4AzZBhazqJJRDrU0kLQ0xT5Zg0TRHb6ygWSKy/8brqy
+    WoQAmzlOIWyZ4oWw3zRj35RlLGP9P4mkwF7/VLBkCo6Fpj/Oc1Hy46xGc+tgl6h0
+    Am3QwTbePrW3kidvKeYRU9eKfanYbwprWqnQxnf5GbZKWOr/ym1V7KcwimpST0KB
+    /MlPn72LEYyZ58ESvi9NIBtN4h+uQVH+LOnunKIHmB+rpcqot9/a7EOsbhBCwT3d
+    0lyK96LKkoI3awrsuZ4eTs9CMCzpNVcIozG01QIDAQABAoIBADW6AmdriN53P5vy
+    IdsTmiVobXMPaA2IE2xRDWNjmKH/IDaL4LK9uFnLmHw595OsJG/Z+qsbJTMERdcQ
+    Yf2d/8/28jZLItOPxVM4lAwiiJuwGN/pXkCy23NfJ7OwokviQQDYm330tgT4am3H
+    0ncwU56nQcQbGhafHh8eItZHclwHF5eioTAo3TulEe8Iq5qrPRGktsTKS+aOpH3P
+    3kU0shRBW9/gyxdU6HLx/ru0k8wdeoQIrn4otJd+tusL5L0v2s8VN0D0jn5NXkmT
+    PXxI6UJ70OO6/o6Mbl0NHfVKeBKC26KaYTz6/5ujVPpWjlmIRsErIVWfSAdTLUxp
+    thw3ywECgYEA0Jofk2TQ+0Kp1YJQFvnRFWUAtzb41uDyDAaMF/6AIjyu0Vq/NNTw
+    tw0uC0lod13TGpc3U8/LxMNFe+YwELBV7TZ5ZWTCUJAT6EWUr9FjRaKQh/X8AZx0
+    3edAhhrfr4XHej2j03GCkccziagGS0gy+BMoJNhMax84UZChWaamtTUCgYEA3WRc
+    qlS2cc4pYi+0rsucNd81q2mwp7EKcT7OR8BUtkOl8y/H9VO135o/ZpQyX97mgmHU
+    N45Lzzg9AVJpGqIzt9CVUgW+nstslrNYRaDg9Q7h8qQpJJlqZhcQCa7+m9ySko+/
+    PWiIzaKp2SVNgjWXZPvZICVDDEiNSCOU4u1bFSECgYB2xBlQMOku9QB++EejHS6m
+    kK/8oEbDCKWmpR+kFZlcZNJfjdwpN0ep4M4jTPM2auvjSs8MX9WzPD5WUXNyPQNf
+    IFGzoc9kUPOUnfEOvRdZMTo6vplxTWPYZ258K9bJN1CgT3Hz07+0Qgccy9ZxjDTA
+    ux9zAtdXchn9jmvfABwQNQKBgHwEhIRGAA2wVy5RWv2vwUnMR9xF0FefrSHS9Ors
+    qoePTZ703SZoRjGDzpA/5BggXTAcbSzR4VWrQ0FCUO5CfoYxqfPQk/+QJLwmqwQW
+    Iu4j8B5kJ0gBSMD3mlxSUv4siU7gh1h2/mty+4JQiyKtsqk3C2IefXicC8ilZfnY
+    zHUBAoGAZBxZuLS91dai3zPkmhrs5UTWMWDjZoDJs5iwXmLmbwFUdF6eWq3EJiQz
+    xImVA9ae6K4JFKWaGDcwf7ovKiD7e8hi/iOosmrM4vz5/hfpcLLGAhSFUl+jbmev
+    kffIzI8HfnLCi6zYign3/n/KrKDsDjhbLxdW9A0Vh+TTloNpYA4=
+    -----END RSA PRIVATE KEY-----
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: wazuh-indexer-credentials
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  password: test
+  username: admin
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: wazuh-manager-credentials
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  password: MyS3cr37P450r.*-1dsfs84f
+  username: wazuh-wui
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: wazuh-manager-env
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  API_PASSWORD: MyS3cr37P450r.*-1dsfs84f
+  API_USERNAME: wazuh-wui
+  INDEXER_PASSWORD: test
+  INDEXER_USERNAME: admin
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/tls
+metadata:
+  name: wazuh-node-cert
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDLzCCAhegAwIBAgIQT9HYb0zTmU71twO/tLn5CzANBgkqhkiG9w0BAQsFADAS
+    MRAwDgYDVQQDEwdyb290LWNhMB4XDTI0MDIxODE3MDI1M1oXDTM0MDIxNTE3MDI1
+    M1owMzExMC8GA1UEAxMod2F6dWgtaW5kZXhlci5peC13YXp1aC5zdmMuY2x1c3Rl
+    ci5sb2NhbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOAx1ZUMmRVM
+    6oUxKosy3M6n42Has+Yh/5WbYCEjb/L2g0XEhWeKM7Ik78Nib/ovDZy2lc+GW228
+    mTkC1UfHzFDR/ZrrnloeX4nSlgfMz2RFb6peyWrWgXL4Zzw7f1iCfwgkQyebZWUY
+    sOGW1WmoePGNH+hHMpO2uCqINIo6O8hnD1LrZqCkJGaBhJvPq5IPoda4GPCbOs7F
+    b3dFlgWZ80z5DTmybOZqZvfNelpOmrBXtncxQFPt1MNHUdEDDelNutLxLScFI6UZ
+    HpkGddRs90iizJjuSJ432Zqx00mjuyhWs8dP6yPlCegyuRakum+SXFdWj+CwkqEC
+    3LqKDlgchWsCAwEAAaNgMF4wDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsG
+    AQUFBwMBBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFC9x0Q56
+    S9j1bjENdU99sCAl668OMA0GCSqGSIb3DQEBCwUAA4IBAQAeM8hOwWrrLv7RLk5G
+    kzbO5pjbXtFk/FB6Ka8nM8I4JJLJ3tkfZxqlHR0zpxPfDXjOqWk7zeHrGzCPwavd
+    JAjeOsG8/NvOkCtv898ukPo2P/NMjY8aF3TlKZZ9KkwpmXMyR4IBGTqMyZLMicWf
+    4RmgtCX7exdvqr//L3laQmPuEb9i7IOd+QLhJOVAhb4e+R8Bcg1TzZ18SVYbQnva
+    8XGUFMNpajgZPmcFfYdfTCYVVpN/UeC7d4yThyxbeDutR9L9FPbgxy/1GhDr0ppx
+    Pmi2U0NT3IaNR4xULSps77i4EPXu1Kjwr1Z/88Cm/TYghmREOtJWZ1It39v5zXHJ
+    DMoV
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEA4DHVlQyZFUzqhTEqizLczqfjYdqz5iH/lZtgISNv8vaDRcSF
+    Z4ozsiTvw2Jv+i8NnLaVz4ZbbbyZOQLVR8fMUNH9muueWh5fidKWB8zPZEVvql7J
+    ataBcvhnPDt/WIJ/CCRDJ5tlZRiw4ZbVaah48Y0f6Ecyk7a4Kog0ijo7yGcPUutm
+    oKQkZoGEm8+rkg+h1rgY8Js6zsVvd0WWBZnzTPkNObJs5mpm9816Wk6asFe2dzFA
+    U+3Uw0dR0QMN6U260vEtJwUjpRkemQZ11Gz3SKLMmO5InjfZmrHTSaO7KFazx0/r
+    I+UJ6DK5FqS6b5JcV1aP4LCSoQLcuooOWByFawIDAQABAoIBAEQLfAqv9yp63Ncu
+    E/6JonDqjd3eVimr+fm7XdLRAaJZZYBgZCkHzibshQTlNJ1XeKcu14tT+R32Vv7x
+    uDAAGSgShAloJ/isLU0UaErXw75oQLsR58oQbtupPxQN7tm7Sbj74JH93Slw9AaU
+    FBPseUC/F4cVTOl+VKk8C85EXG63H1fsoHjBQAVCW0QNf7nJb7ft5TSP9BVxJ1KP
+    hzdCoHZ7U4sWggq4/Ag7azcjChhqkDzkTqabE+xzZVXLAIZgmo3PSWNd/04NGAIc
+    GI5O1myZmUqFs4BOZTjHnqdRUq2KxKcbsT3Mn1LQR5Rw4DGrCwmS0KFo86viFdFI
+    Xt2XfnECgYEA/AUsgqhn0rcCMkGgiIdoilbvB/GkqRTyi1QUEi3rQxR/Bq72b/QZ
+    pLAGNcFX5CwUuQ5pCyCPyonelGooJMwSxjZbKc5qTmcOvtQ7V4gvbXZghsBi22z6
+    TC1JKDP3HYv76z4rQ2l/O0Dc0MD43nEiOWrToE6Z2p4yYid1yGAzRnMCgYEA47wr
+    /5wdXolH8pSNod+JH6QpUgknfkLZYXh5ECE5cebojdPZVJBB7Dv4fZEFAjnP8rii
+    YB+qqXWwU4rchzTEpCRoGkxLxqJVGO3IkwmlLBUbKXCeSzpalKh8H1Qe2eIkxxiJ
+    sbWCP6knxqGgArnc5JX5euZhdGS1Mq1bi9dEjykCgYBo5oJrdEua8uAwKQ74JVzH
+    UH44UUXXt0dp5TphgsmNZ2ekUYl0eid+XGKJV4wNBqgtiykAH7KafJ6wKivBfUxH
+    QvLZSPkI327M0axNt/r91itBi6zaZtcchDESUecHXnAisAL0EWKLOGlxXxF4DaFQ
+    Qv4JmQ4DaJvSLViiaiCNrwKBgGktszRuqbHLvYrvySoFz5Lpgpv81lyeCz/VIDSu
+    45UTjDxUp39C0O+GExILNED+6mezlmrGtU9mp3UuIQPg/yDAH8RlkGnA94R37bbb
+    MYnWhaDx/mnIHaWi2xCtDUKcC1hYoN+OcQVt3o0CgKBBrx9zlLGKTWAwUu+A2VMQ
+    rP1hAoGBALU2zf1WG//W6Vfj+32wcSc04v5Nx+UV6qeqpr5pAJ1W0VideYTMQqS9
+    Matsyrm4+x/PkBwFFyWI0YVxDYAIsfJKNImRh3yKl8bidj81b048rVarJYCTEN0d
+    ObQmYWN7ycvD5SHv9jH72DRK+MFHSZfeBuvuZKEcWsylWWhjbTen
+    -----END RSA PRIVATE KEY-----
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/tls
+metadata:
+  name: wazuh-root-ca
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+stringData:
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDDzCCAfegAwIBAgIQOWVZUFuOgjftfDewosygNzANBgkqhkiG9w0BAQsFADAS
+    MRAwDgYDVQQDEwdyb290LWNhMB4XDTI0MDIxODE3MDI1MloXDTM0MDIxNTE3MDI1
+    MlowEjEQMA4GA1UEAxMHcm9vdC1jYTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+    AQoCggEBAMB/ajw68kaZDVTp7Tj6mQHLT8Hfbaaz5ac1utFCbo1GbQjSpIDDgKlM
+    y84UuUAfJg9M9ADCG0jrANcuHFHh/+ubKXFCS0+7NBZuzQU3eQQ9hzcs7goNjx7a
+    fOR7owMxiZygfKnigrcY42krMuiUPGpY4RcNrnLEgoKPllNca2WuB4x1EmeiU25A
+    bkLrvyE1RmcUvfnGFtpQU+dnnudSD55v7rXtqS/RMpW46UVnyQVHymN+DzGtFw4K
+    mVdWVTjYXKv25tu00iLb8yq+LliV7t5j84n4ESuEbG3NtEM5FzRe1gmgV7NhVM5Z
+    Gy27VKhYLN2xbW82XaONuvTAmeCyFOMCAwEAAaNhMF8wDgYDVR0PAQH/BAQDAgKk
+    MB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAPBgNVHRMBAf8EBTADAQH/
+    MB0GA1UdDgQWBBQvcdEOekvY9W4xDXVPfbAgJeuvDjANBgkqhkiG9w0BAQsFAAOC
+    AQEARa+mzlTOox0zmbc4alB2N75UUmY67xajcAcPDSUad+/W2/jAh0iPQiVVX+Vq
+    W2ay/FOBl5BFfmKiUR8QjKOvicVV2ZR1a0csxrFR/nhyFYy2oHp8ljymjNphDpnv
+    GNLpy6JS+eQRlSKVE2l0RZiXRNuvlV6Opx+V0+jcaJjfS5actd7NTLZfxSpXCUPS
+    gM/BAWq6WieTZlKDKhMEqy06VEk5Rx3ogGy239k5EC707g14TsJoeIK2b7w5PZe/
+    7UxB/93mvRvqI5lWYIpajR7IzWCXx11h9J27FD9DDXp3bKktaka9a8ZxmJegjlD1
+    dqklOCPmCEpBAXTT0ZJILJeOXA==
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEAwH9qPDryRpkNVOntOPqZActPwd9tprPlpzW60UJujUZtCNKk
+    gMOAqUzLzhS5QB8mD0z0AMIbSOsA1y4cUeH/65spcUJLT7s0Fm7NBTd5BD2HNyzu
+    Cg2PHtp85HujAzGJnKB8qeKCtxjjaSsy6JQ8aljhFw2ucsSCgo+WU1xrZa4HjHUS
+    Z6JTbkBuQuu/ITVGZxS9+cYW2lBT52ee51IPnm/ute2pL9EylbjpRWfJBUfKY34P
+    Ma0XDgqZV1ZVONhcq/bm27TSItvzKr4uWJXu3mPzifgRK4Rsbc20QzkXNF7WCaBX
+    s2FUzlkbLbtUqFgs3bFtbzZdo4269MCZ4LIU4wIDAQABAoIBABl5gzSfVGq1XIdN
+    QeCVgWQ0ZMSybc9u5UiAms2QrhKyLEHLpouH0+IT0LDgGzf6J05FD9F93qCCwSS4
+    7HSFpRmn+g8MB+1wR89kMGutUK2X+un5XzMjYjpiDb8rAYKtrpl0v6q32Dak64uC
+    dQVEgM5OHtOvMtPrX54ppGo5w9i7uRoTaGY57Oj2S1Sn4o1CxZ7eP3QD/9gNQEhh
+    Y6IV0azFBgyO/wniXBd0EBPQbqEv3GmI8KJnFdGwJJENNK5Zxn3LQa96Er3h29UY
+    Hb8D1O5QRFJiHv8Rb+eyq4AQCTXqAMBKcKoUwTGURhZe+FH3wjEpyCE7LVAehwTa
+    m4K/MnkCgYEAx2+xKr16x2ln+lwPZ9Q/lmidu2EX4AxDlUl8cdzsbPNZltKAox0C
+    s5gsJZjnIB6kv3Nw7w0lYF3Sr3wzgpPArfCQ8tvn7JISJtWFFUB7+uEZZy8FNsl9
+    KNSKh6A2CxfX57Tjf69edX4G5PA/Xt4Y9NDuxgDFCo++aTbLffa3jXUCgYEA9xfw
+    X3R7shHMIrPKRULxpax4iRjb6Q5OJOddyiUgP5APB0pC6j4YnRpprr//ii9hrLVF
+    0o/rvWU3lM/llUrYjPKpS+iMVjudQ/7qy19O/xztbuhhaYE3Be8UntDlFGCs3rzH
+    cRMrqBPqcLk/MabxQpb1j+Bl+VZYeu+0VpVGFfcCgYEAug/UBAHeiCgon4Q/wyhb
+    YqGbdnNw6M/IRYDXnwrzb/ngvTsKVCL+oDr6BOGPz4GHRi4XUI69LhiaNKn1DH94
+    JU7ojArpZuYoFR7jGB6fDEHxhzhw7tov8GXKEBpCETtfbIZwMHGV+JtpJzGUjZc7
+    RTufaA7TxbSxektqscv5FvkCgYEAkI2MrgszIiWPSu3rc0GKpOWVTn8gh+M6jBRe
+    phe6GfVpFVa4dtkFBUOid/0SvgCiH6ucwWY4/3/rWD+XjBNRRIPhzuqozvnpMxI6
+    wedsC4sczDleY56YVfxcD90dZyJ3f4bpFpmkfJvKF1AITD/h/Jbb6ePZRFjjQmhh
+    FBYX/lkCgYBTYBxwuFpXUAvbKaBnqN+Ik1jCHOTDYfswUbaDdYsT8gs/kkIqDW2/
+    SsvnEe1XrK0AVgDSChD0O6UJi5rMJtb7tcPY6FlE46HzRohE/JKZVJuN0YhKNX9Z
+    NBMM3J2VPNjX0jn9aeHIkJCSCs18kIpbLRqPwwv4vL1oicoq5GskWw==
+    -----END RSA PRIVATE KEY-----
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wazuh-dashboard-conf
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+data:
+  opensearch_dashboards.yml: |
+    server.host: 0.0.0.0
+    server.port: 5601
+    opensearch.hosts: "https://wazuh-indexer.ix-wazuh.svc.cluster.local:9200"
+    opensearch.ssl.verificationMode: certificate
+    opensearch.requestHeadersWhitelist: ["securitytenant","Authorization"]
+    opensearch_security.multitenancy.enabled: false
+    opensearch_security.readonly_mode.roles: ["kibana_read_only"]
+    server.ssl.enabled: true
+    server.ssl.key: "/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem"
+    server.ssl.certificate: "/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem"
+    opensearch.ssl.certificateAuthorities: ["/usr/share/wazuh-dashboard/certs/root-ca.pem"]
+    uiSettings.overrides.defaultRoute: /app/wazuh
+  wazuh.yml: |
+    hosts:
+    - 1513629884013:
+        url: "https://wazuh-manager.ix-wazuh.svc.cluster.local"
+        port: 443
+        username: "wazuh-wui"
+        password: "MyS3cr37P450r.*-1dsfs84f"
+        run_as: false
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wazuh-dashboard-env
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+data:
+  WAZUH_API_URL: wazuh-manager.ix-wazuh.svc.cluster.local
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wazuh-indexer-conf
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+data:
+  internal_users.yml: |
+    ---
+    # This is the internal user database
+    # The hash value is a bcrypt hash and can be generated with plugin/tools/hash.sh
+  
+    _meta:
+      type: "internalusers"
+      config_version: 2
+  
+    # Define your internal users here
+  
+    ## Demo users
+  wazuh.indexer.yml: |
+    network.host: "0.0.0.0"
+    node.name: "wazuh-indexer.ix-wazuh.svc.cluster.local"
+    path.data: /var/lib/wazuh-indexer
+    path.logs: /var/log/wazuh-indexer
+    discovery.type: single-node
+    http.port: 9200-9299
+    transport.tcp.port: 9300-9399
+    compatibility.override_main_response_version: true
+    plugins.security.ssl.http.pemcert_filepath: /usr/share/wazuh-indexer/certs/wazuh.indexer.pem
+    plugins.security.ssl.http.pemkey_filepath: /usr/share/wazuh-indexer/certs/wazuh.indexer.key
+    plugins.security.ssl.http.pemtrustedcas_filepath: /usr/share/wazuh-indexer/certs/root-ca.pem
+    plugins.security.ssl.transport.pemcert_filepath: /usr/share/wazuh-indexer/certs/wazuh.indexer.pem
+    plugins.security.ssl.transport.pemkey_filepath: /usr/share/wazuh-indexer/certs/wazuh.indexer.key
+    plugins.security.ssl.transport.pemtrustedcas_filepath: /usr/share/wazuh-indexer/certs/root-ca.pem
+    plugins.security.ssl.http.enabled: true
+    plugins.security.ssl.transport.enforce_hostname_verification: false
+    plugins.security.ssl.transport.resolve_hostname: false
+    plugins.security.authcz.admin_dn:
+    - "CN=admin" # Removed "OU=Wazuh,O=Wazuh,L=California,C=US" because of genSignedCert functions
+    plugins.security.check_snapshot_restore_write_privileges: true
+    plugins.security.enable_snapshot_restore_privilege: true
+    plugins.security.nodes_dn:
+    - "CN=wazuh-indexer.ix-wazuh.svc.cluster.local" # Removed "OU=Wazuh,O=Wazuh,L=California,C=US" because of genSignedCert functions
+    plugins.security.restapi.roles_enabled:
+    - "all_access"
+    - "security_rest_api_access"
+    plugins.security.system_indices.enabled: true
+    plugins.security.system_indices.indices: [".opendistro-alerting-config", ".opendistro-alerting-alert*", ".opendistro-anomaly-results*", ".opendistro-anomaly-detector*", ".opendistro-anomaly-checkpoints", ".opendistro-anomaly-detection-state", ".opendistro-reports-*", ".opendistro-notifications-*", ".opendistro-notebooks", ".opensearch-observability", ".opendistro-asynchronous-search-response*", ".replication-metadata-store"]
+    plugins.security.allow_default_init_securityindex: true
+    cluster.routing.allocation.disk.threshold_enabled: false
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wazuh-indexer-env
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+data:
+  OPENSEARCH_JAVA_OPTS: -Xms1024m -Xmx1024m
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wazuh-manager-conf
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+data:
+  wazuh_manager.conf: |-
+    <ossec_config>
+      <global>
+        <jsonout_output>yes</jsonout_output>
+        <alerts_log>yes</alerts_log>
+        <logall>no</logall>
+        <logall_json>no</logall_json>
+        <email_notification>no</email_notification>
+        <smtp_server>smtp.example.wazuh.com</smtp_server>
+        <email_from>wazuh@example.wazuh.com</email_from>
+        <email_to>recipient@example.wazuh.com</email_to>
+        <email_maxperhour>12</email_maxperhour>
+        <email_log_source>alerts.log</email_log_source>
+        <agents_disconnection_time>10m</agents_disconnection_time>
+        <agents_disconnection_alert_time>0</agents_disconnection_alert_time>
+      </global>
+  
+      <alerts>
+        <log_alert_level>3</log_alert_level>
+        <email_alert_level>12</email_alert_level>
+      </alerts>
+  
+      <!-- Choose between "plain", "json", or "plain,json" for the format of internal logs -->
+      <logging>
+        <log_format>plain</log_format>
+      </logging>
+  
+      <remote>
+        <connection>secure</connection>
+        <port>1514</port>
+        <protocol>tcp</protocol>
+        <queue_size>131072</queue_size>
+      </remote>
+  
+      <!-- Policy monitoring -->
+      <rootcheck>
+        <disabled>no</disabled>
+        <check_files>yes</check_files>
+        <check_trojans>yes</check_trojans>
+        <check_dev>yes</check_dev>
+        <check_sys>yes</check_sys>
+        <check_pids>yes</check_pids>
+        <check_ports>yes</check_ports>
+        <check_if>yes</check_if>
+  
+        <!-- Frequency that rootcheck is executed - every 12 hours -->
+        <frequency>43200</frequency>
+  
+        <rootkit_files>etc/rootcheck/rootkit_files.txt</rootkit_files>
+        <rootkit_trojans>etc/rootcheck/rootkit_trojans.txt</rootkit_trojans>
+  
+        <skip_nfs>yes</skip_nfs>
+      </rootcheck>
+  
+      <wodle name="cis-cat">
+        <disabled>yes</disabled>
+        <timeout>1800</timeout>
+        <interval>1d</interval>
+        <scan-on-start>yes</scan-on-start>
+  
+        <java_path>wodles/java</java_path>
+        <ciscat_path>wodles/ciscat</ciscat_path>
+      </wodle>
+  
+      <!-- Osquery integration -->
+      <wodle name="osquery">
+        <disabled>yes</disabled>
+        <run_daemon>yes</run_daemon>
+        <log_path>/var/log/osquery/osqueryd.results.log</log_path>
+        <config_path>/etc/osquery/osquery.conf</config_path>
+        <add_labels>yes</add_labels>
+      </wodle>
+  
+      <!-- System inventory -->
+      <wodle name="syscollector">
+        <disabled>no</disabled>
+        <interval>1h</interval>
+        <scan_on_start>yes</scan_on_start>
+        <hardware>yes</hardware>
+        <os>yes</os>
+        <network>yes</network>
+        <packages>yes</packages>
+        <ports all="no">yes</ports>
+        <processes>yes</processes>
+  
+        <!-- Database synchronization settings -->
+        <synchronization>
+          <max_eps>10</max_eps>
+        </synchronization>
+      </wodle>
+  
+      <sca>
+        <enabled>yes</enabled>
+        <scan_on_start>yes</scan_on_start>
+        <interval>12h</interval>
+        <skip_nfs>yes</skip_nfs>
+      </sca>
+  
+      <vulnerability-detector>
+        <enabled>no</enabled>
+        <interval>5m</interval>
+        <min_full_scan_interval>6h</min_full_scan_interval>
+        <run_on_start>yes</run_on_start>
+  
+        <!-- Ubuntu OS vulnerabilities -->
+        <provider name="canonical">
+          <enabled>no</enabled>
+          <os>trusty</os>
+          <os>xenial</os>
+          <os>bionic</os>
+          <os>focal</os>
+          <os>jammy</os>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+        <!-- Debian OS vulnerabilities -->
+        <provider name="debian">
+          <enabled>no</enabled>
+          <os>buster</os>
+          <os>bullseye</os>
+          <os>bookworm</os>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+        <!-- RedHat OS vulnerabilities -->
+        <provider name="redhat">
+          <enabled>no</enabled>
+          <os>5</os>
+          <os>6</os>
+          <os>7</os>
+          <os>8</os>
+          <os>9</os>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+        <!-- Amazon Linux OS vulnerabilities -->
+        <provider name="alas">
+          <enabled>no</enabled>
+          <os>amazon-linux</os>
+          <os>amazon-linux-2</os>
+          <os>amazon-linux-2023</os>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+        <!-- SUSE Linux Enterprise OS vulnerabilities -->
+        <provider name="suse">
+          <enabled>no</enabled>
+          <os>11-server</os>
+          <os>11-desktop</os>
+          <os>12-server</os>
+          <os>12-desktop</os>
+          <os>15-server</os>
+          <os>15-desktop</os>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+        <!-- Arch OS vulnerabilities -->
+        <provider name="arch">
+          <enabled>no</enabled>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+        <!-- Alma Linux OS vulnerabilities -->
+        <provider name="almalinux">
+          <enabled>no</enabled>
+          <os>8</os>
+          <os>9</os>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+        <!-- Windows OS vulnerabilities -->
+        <provider name="msu">
+          <enabled>yes</enabled>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+        <!-- Aggregate vulnerabilities -->
+        <provider name="nvd">
+          <enabled>yes</enabled>
+          <update_interval>1h</update_interval>
+        </provider>
+  
+      </vulnerability-detector>
+  
+      <!-- File integrity monitoring -->
+      <syscheck>
+        <disabled>no</disabled>
+  
+        <!-- Frequency that syscheck is executed default every 12 hours -->
+        <frequency>43200</frequency>
+  
+        <scan_on_start>yes</scan_on_start>
+  
+        <!-- Generate alert when new file detected -->
+        <alert_new_files>yes</alert_new_files>
+  
+        <!-- Don't ignore files that change more than 'frequency' times -->
+        <auto_ignore frequency="10" timeframe="3600">no</auto_ignore>
+  
+        <!-- Directories to check  (perform all possible verifications) -->
+        <directories>/etc,/usr/bin,/usr/sbin</directories>
+        <directories>/bin,/sbin,/boot</directories>
+  
+        <!-- Files/directories to ignore -->
+        <ignore>/etc/mtab</ignore>
+        <ignore>/etc/hosts.deny</ignore>
+        <ignore>/etc/mail/statistics</ignore>
+        <ignore>/etc/random-seed</ignore>
+        <ignore>/etc/random.seed</ignore>
+        <ignore>/etc/adjtime</ignore>
+        <ignore>/etc/httpd/logs</ignore>
+        <ignore>/etc/utmpx</ignore>
+        <ignore>/etc/wtmpx</ignore>
+        <ignore>/etc/cups/certs</ignore>
+        <ignore>/etc/dumpdates</ignore>
+        <ignore>/etc/svc/volatile</ignore>
+  
+        <!-- File types to ignore -->
+        <ignore type="sregex">.log$|.swp$</ignore>
+  
+        <!-- Check the file, but never compute the diff -->
+        <nodiff>/etc/ssl/private.key</nodiff>
+  
+        <skip_nfs>yes</skip_nfs>
+        <skip_dev>yes</skip_dev>
+        <skip_proc>yes</skip_proc>
+        <skip_sys>yes</skip_sys>
+  
+        <!-- Nice value for Syscheck process -->
+        <process_priority>10</process_priority>
+  
+        <!-- Maximum output throughput -->
+        <max_eps>100</max_eps>
+  
+        <!-- Database synchronization settings -->
+        <synchronization>
+          <enabled>yes</enabled>
+          <interval>5m</interval>
+          <max_interval>1h</max_interval>
+          <max_eps>10</max_eps>
+        </synchronization>
+      </syscheck>
+  
+      <!-- Active response -->
+      <global>
+        <white_list>127.0.0.1</white_list>
+        <white_list>^localhost.localdomain$</white_list>
+      </global>
+  
+      <command>
+        <name>disable-account</name>
+        <executable>disable-account</executable>
+        <timeout_allowed>yes</timeout_allowed>
+      </command>
+  
+      <command>
+        <name>restart-wazuh</name>
+        <executable>restart-wazuh</executable>
+      </command>
+  
+      <command>
+        <name>firewall-drop</name>
+        <executable>firewall-drop</executable>
+        <timeout_allowed>yes</timeout_allowed>
+      </command>
+  
+      <command>
+        <name>host-deny</name>
+        <executable>host-deny</executable>
+        <timeout_allowed>yes</timeout_allowed>
+      </command>
+  
+      <command>
+        <name>route-null</name>
+        <executable>route-null</executable>
+        <timeout_allowed>yes</timeout_allowed>
+      </command>
+  
+      <command>
+        <name>win_route-null</name>
+        <executable>route-null.exe</executable>
+        <timeout_allowed>yes</timeout_allowed>
+      </command>
+  
+      <command>
+        <name>netsh</name>
+        <executable>netsh.exe</executable>
+        <timeout_allowed>yes</timeout_allowed>
+      </command>
+  
+      <!--
+      <active-response>
+        active-response options here
+      </active-response>
+      -->
+  
+      <!-- Log analysis -->
+      <localfile>
+        <log_format>command</log_format>
+        <command>df -P</command>
+        <frequency>360</frequency>
+      </localfile>
+  
+      <localfile>
+        <log_format>full_command</log_format>
+        <command>netstat -tulpn | sed 's/\([[:alnum:]]\+\)\ \+[[:digit:]]\+\ \+[[:digit:]]\+\ \+\(.*\):\([[:digit:]]*\)\ \+\([0-9\.\:\*]\+\).\+\ \([[:digit:]]*\/[[:alnum:]\-]*\).*/\1 \2 == \3 == \4 \5/' | sort -k 4 -g | sed 's/ == \(.*\) ==/:\1/' | sed 1,2d</command>
+        <alias>netstat listening ports</alias>
+        <frequency>360</frequency>
+      </localfile>
+  
+      <localfile>
+        <log_format>full_command</log_format>
+        <command>last -n 20</command>
+        <frequency>360</frequency>
+      </localfile>
+  
+      <ruleset>
+        <!-- Default ruleset -->
+        <decoder_dir>ruleset/decoders</decoder_dir>
+        <rule_dir>ruleset/rules</rule_dir>
+        <rule_exclude>0215-policy_rules.xml</rule_exclude>
+        <list>etc/lists/audit-keys</list>
+        <list>etc/lists/amazon/aws-eventnames</list>
+        <list>etc/lists/security-eventchannel</list>
+  
+        <!-- User-defined ruleset -->
+        <decoder_dir>etc/decoders</decoder_dir>
+        <rule_dir>etc/rules</rule_dir>
+      </ruleset>
+  
+      <rule_test>
+        <enabled>yes</enabled>
+        <threads>1</threads>
+        <max_sessions>64</max_sessions>
+        <session_timeout>15m</session_timeout>
+      </rule_test>
+  
+      <!-- Configuration for wazuh-authd -->
+      <auth>
+        <disabled>no</disabled>
+        <port>1515</port>
+        <use_source_ip>no</use_source_ip>
+        <purge>yes</purge>
+        <use_password>no</use_password>
+        <ciphers>HIGH:!ADH:!EXP:!MD5:!RC4:!3DES:!CAMELLIA:@STRENGTH</ciphers>
+        <!-- <ssl_agent_ca></ssl_agent_ca> -->
+        <ssl_verify_host>no</ssl_verify_host>
+        <ssl_manager_cert>etc/sslmanager.cert</ssl_manager_cert>
+        <ssl_manager_key>etc/sslmanager.key</ssl_manager_key>
+        <ssl_auto_negotiate>no</ssl_auto_negotiate>
+      </auth>
+  
+      <cluster>
+        <name>wazuh</name>
+        <node_name>node01</node_name>
+        <node_type>master</node_type>
+        <key>aa093264ef885029653eea20dfcf51ae</key>
+        <port>1516</port>
+        <bind_addr>0.0.0.0</bind_addr>
+        <nodes>
+            <node>wazuh.manager</node>
+        </nodes>
+        <hidden>no</hidden>
+        <disabled>yes</disabled>
+      </cluster>
+  
+    </ossec_config>
+  
+    <ossec_config>
+      <localfile>
+        <log_format>syslog</log_format>
+        <location>/var/ossec/logs/active-responses.log</location>
+      </localfile>
+  
+    </ossec_config>
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wazuh-manager-env
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+data:
+  FILEBEAT_SSL_VERIFICATION_MODE: full
+  INDEXER_URL: wazuh-indexer.ix-wazuh.svc.cluster.local:9200
+  SSL_CERTIFICATE: /etc/ssl/filebeat.pem
+  SSL_CERTIFICATE_AUTHORITIES: /etc/ssl/root-ca.pem
+  SSL_KEY: /etc/ssl/filebeat.key
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-dashboard-certs
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-dashboard-config
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-dashboard-custom
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-dashboard-opensearch-conf
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-indexer
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-indexer-certs
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-indexer-opensearch-conf
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-active-response
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-agentless
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-api-configuration
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-certs
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-conf
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-etc
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-filebeat-etc
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-filebeat-var
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-integrations
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-logs
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-queue
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-var-multigroups
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wazuh-manager-wodles
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: wazuh-indexer
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+    service.name: "indexer"
+spec:
+  type: ClusterIP
+  publishNotReadyAddresses: false
+  ports:
+    - name: indexer
+      port: 9200
+      protocol: TCP
+      targetPort: 9200
+  selector:
+    pod.name: indexer
+    app.kubernetes.io/name: wazuh
+    app.kubernetes.io/instance: wazuh
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: wazuh
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+    service.name: "main"
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "wazuh"
+spec:
+  type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
+  publishNotReadyAddresses: false
+  ports:
+    - name: main
+      port: 443
+      protocol: TCP
+      targetPort: 5601
+  selector:
+    pod.name: main
+    app.kubernetes.io/name: wazuh
+    app.kubernetes.io/instance: wazuh
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: wazuh-manager
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+    service.name: "manager"
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "wazuh"
+spec:
+  type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
+  publishNotReadyAddresses: false
+  ports:
+    - name: agent-connect
+      port: 1514
+      protocol: TCP
+      targetPort: 1514 
+    - name: agent-enroll
+      port: 1515
+      protocol: TCP
+      targetPort: 1515 
+    - name: api
+      port: 55000
+      protocol: TCP
+      targetPort: 55000 
+    - name: syslog-collect
+      port: 514
+      protocol: UDP
+      targetPort: 514
+  selector:
+    pod.name: manager
+    app.kubernetes.io/name: wazuh
+    app.kubernetes.io/instance: wazuh
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wazuh-indexer
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:  
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      pod.name: indexer
+      app.kubernetes.io/name: wazuh
+      app.kubernetes.io/instance: wazuh
+  template:
+    metadata:
+      labels:
+        app: "wazuh-0.0.1"
+        app.kubernetes.io/instance: "wazuh"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/name: "wazuh"
+        app.kubernetes.io/version: "4.7.2"
+        helm-revision: "1"
+        helm.sh/chart: "wazuh-0.0.1"
+        pod.lifecycle: "permanent"
+        pod.name: "indexer"
+        release: "wazuh"
+      annotations:
+        rollme: "GtUgE"
+    spec:
+      serviceAccountName: default
+      automountServiceAccountToken: false
+      runtimeClassName: 
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      shareProcessNamespace: false
+      enableServiceLinks: false
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      topologySpreadConstraints:
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "truecharts.org/rack"
+          labelSelector:
+            matchLabels:      
+              pod.name: indexer
+              app.kubernetes.io/name: wazuh
+              app.kubernetes.io/instance: wazuh
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "kubernetes.io/hostname"
+          labelSelector:
+            matchLabels:      
+              pod.name: indexer
+              app.kubernetes.io/name: wazuh
+              app.kubernetes.io/instance: wazuh
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+        sysctls: []
+      hostUsers: true
+      containers:
+        - name: wazuh
+          image: wazuh/wazuh-indexer:4.7.2@sha256:66c3e10254bebd4eeb45d609e6db77dd5bce8cad60a11261e31aa766a2b0ed8a
+          imagePullPolicy: IfNotPresent
+          tty: false
+          stdin: false
+          command:
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "id\nls -la /wazuh-config\nln -sf /wazuh-config/opensearch.yml /usr/share/wazuh-indexer/opensearch.yml\nln -sf /wazuh-config/internal_users.yml /usr/share/wazuh-indexer/opensearch-security/internal_users.yml\nls -la /\nls -la /usr/share/\nls -la /usr/share/wazuh-indexer/\nls -la /usr/share/wazuh-indexer/opensearch-security\n\n/entrypoint.sh &\n\n# Function to check if port 9200 is open\ncheck_port() {\n    (echo >/dev/tcp/localhost/9200) >/dev/null 2>&1 && return 0 || return 1\n}\n\n# Wait for port 9200 to become available\ncounter=0\nwhile [ $counter -lt 300 ]; do\n    sleep 1\n    counter=$((counter+1))\n    if check_port; then\n        export INSTALLATION_DIR=/usr/share/wazuh-indexer\n        CACERT=$INSTALLATION_DIR/certs/root-ca.pem\n        KEY=$INSTALLATION_DIR/certs/admin.key\n        CERT=$INSTALLATION_DIR/certs/admin.pem\n        export JAVA_HOME=/usr/share/wazuh-indexer/jdk\n\n        chmod +x /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh\n        /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh \\\n        -f /usr/share/wazuh-indexer/opensearch-security/internal_users.yml \\\n        -t internalusers \\\n        -icl \\\n        -nhnv \\\n        -cacert $CACERT \\\n        -cert $CERT \\\n        -key $KEY \\\n        -p 9200\n\n        # Bring the output of entrypoint.sh to the foreground\n        fg 1\n        break\n    fi\ndone\n\nif [ $counter -eq 300 ]; then\n    echo \"Timeout: Port 9200 not open after 5 minutes.\"\n    echo \"The change of login/password cannot take effect.\"\nfi"
+          ports:
+            - name: indexer
+              containerPort: 9200
+              protocol: TCP
+              hostPort: null
+          volumeMounts:
+            - name: indexer
+              mountPath: /var/lib/wazuh-indexer
+              readOnly: false
+            - name: indexer-certs
+              mountPath: /usr/share/wazuh-indexer/certs
+              readOnly: false
+            - name: indexer-opensearch-conf
+              mountPath: /wazuh-config
+              readOnly: false
+          livenessProbe:
+            tcpSocket:
+              port: 9200
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 9200
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 2
+            timeoutSeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 9200
+            initialDelaySeconds: 10
+            failureThreshold: 60
+            successThreshold: 1
+            timeoutSeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits: 
+              cpu: 4000m 
+              memory: 8Gi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add: []
+              drop:
+                - ALL
+          envFrom:
+            - configMapRef:
+                name: "wazuh-indexer-env"
+          env:
+            - name: "TZ"
+              value: "UTC"
+            - name: "UMASK"
+              value: "0022"
+            - name: "UMASK_SET"
+              value: "0022"
+            - name: "S6_READ_ONLY_ROOT"
+              value: "1"
+      initContainers:
+        - name: wazuh-install-init-credentials
+          image: wazuh/wazuh-indexer:4.7.2@sha256:66c3e10254bebd4eeb45d609e6db77dd5bce8cad60a11261e31aa766a2b0ed8a
+          imagePullPolicy: IfNotPresent
+          tty: false
+          stdin: false
+          command:
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "ls -la /\nls -la /wazuh-config\n\nchmod +x /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh \nexport JAVA_HOME=/usr/share/wazuh-indexer/jdk\n\ncat <<EOF > /wazuh-config/internal_users.yml\n\n---\n# This is the internal user database\n# The hash value is a bcrypt hash and can be generated with plugin/tools/hash.sh\n\n_meta:\n  type: \"internalusers\"\n  config_version: 2\n\n# Define your internal users here\n\n## Demo users \n\nadmin:\n    hash: \"$(echo $(bash /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh -p \"test\") | awk '{print $NF}')\"\n    reserved: true\n    backend_roles:\n    - \"admin\"\n    description: \"Default admin user\"\n\nkibanaserver:\n    hash: \"$(echo $(bash /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh -p \"test02\") | awk '{print $NF}')\"\n    reserved: true\n    backend_roles:\n    - \"admin\"\n    description: \"Default admin user\"\nEOF\n\ncat /wazuh-config/internal_users.yml"
+          volumeMounts:
+            - name: indexer-opensearch-conf
+              mountPath: /wazuh-config
+              readOnly: false
+          
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits: 
+              cpu: 4000m 
+              memory: 8Gi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add: []
+              drop:
+                - ALL
+          env:
+            - name: "TZ"
+              value: "UTC"
+            - name: "UMASK"
+              value: "0022"
+            - name: "UMASK_SET"
+              value: "0022"
+            - name: "S6_READ_ONLY_ROOT"
+              value: "1"
+      volumes:
+        - name: indexer
+          persistentVolumeClaim:
+            claimName: wazuh-indexer
+        - name: indexer-certs
+          persistentVolumeClaim:
+            claimName: wazuh-indexer-certs
+        - name: indexer-opensearch-conf
+          persistentVolumeClaim:
+            claimName: wazuh-indexer-opensearch-conf
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wazuh
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:  
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      pod.name: main
+      app.kubernetes.io/name: wazuh
+      app.kubernetes.io/instance: wazuh
+  template:
+    metadata:
+      labels:
+        app: "wazuh-0.0.1"
+        app.kubernetes.io/instance: "wazuh"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/name: "wazuh"
+        app.kubernetes.io/version: "4.7.2"
+        helm-revision: "1"
+        helm.sh/chart: "wazuh-0.0.1"
+        pod.lifecycle: "permanent"
+        pod.name: "main"
+        release: "wazuh"
+      annotations:
+        rollme: "pqxuy"
+    spec:
+      serviceAccountName: default
+      automountServiceAccountToken: false
+      runtimeClassName: 
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      shareProcessNamespace: false
+      enableServiceLinks: false
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      topologySpreadConstraints:
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "truecharts.org/rack"
+          labelSelector:
+            matchLabels:      
+              pod.name: main
+              app.kubernetes.io/name: wazuh
+              app.kubernetes.io/instance: wazuh
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "kubernetes.io/hostname"
+          labelSelector:
+            matchLabels:      
+              pod.name: main
+              app.kubernetes.io/name: wazuh
+              app.kubernetes.io/instance: wazuh
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+        sysctls: []
+      hostUsers: true
+      containers:
+        - name: wazuh
+          image: wazuh/wazuh-dashboard:4.7.2@sha256:7564058b4e00b1fdb39da9faa232d99addc611dcbd04ef559df5387d4eda8740
+          imagePullPolicy: IfNotPresent
+          tty: false
+          stdin: false
+          command:
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "id\nls -la /wazuh-config\nln -sf /wazuh-config/opensearch_dashboards.yml /usr/share/wazuh-dashboard/config/opensearch_dashboards.yml\nln -sf /wazuh-config/wazuh.yml /usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml\nls -la /\nls -la /usr/share/wazuh-dashboard/data/wazuh/config\nls -la /usr/share/wazuh-dashboard/config\ncat /usr/share/wazuh-dashboard/config/opensearch_dashboards.yml\ncat /usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml\n/entrypoint.sh"
+          ports:
+            - name: main
+              containerPort: 5601
+              protocol: TCP
+              hostPort: null
+          volumeMounts:
+            - name: dashboard-certs
+              mountPath: /usr/share/wazuh-dashboard/certs
+              readOnly: false
+            - name: dashboard-config
+              mountPath: /usr/share/wazuh-dashboard/data/wazuh/config
+              readOnly: false
+            - name: dashboard-custom
+              mountPath: /usr/share/wazuh-dashboard/plugins/wazuh/public/assets/custom
+              readOnly: false
+            - name: dashboard-opensearch-conf
+              mountPath: /wazuh-config
+              readOnly: false
+          livenessProbe:
+            tcpSocket:
+              port: 443
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 443
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 2
+            timeoutSeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 443
+            initialDelaySeconds: 10
+            failureThreshold: 60
+            successThreshold: 1
+            timeoutSeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits: 
+              cpu: 4000m 
+              memory: 8Gi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add: []
+              drop:
+                - ALL
+          envFrom:
+            - configMapRef:
+                name: "wazuh-dashboard-env"
+            - secretRef:
+                name: "wazuh-dashboard-env"
+          env:
+            - name: "TZ"
+              value: "UTC"
+            - name: "UMASK"
+              value: "0022"
+            - name: "UMASK_SET"
+              value: "0022"
+            - name: "S6_READ_ONLY_ROOT"
+              value: "1"
+      initContainers:
+        - name: wazuh-install-init-perms
+          image: alpine:latest
+          imagePullPolicy: IfNotPresent
+          tty: false
+          stdin: false
+          command:
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "mkdir -p /tmp/wazuh/certs\ncp -r /bad-ownership-cert/* /tmp/wazuh/certs\n\n# Set UMASK so newly created file will have permissions 400\numask 377\n\n# Source directory\nsource_dir=\"/tmp/wazuh/certs\"\n\n# Destination directories\ndestinations=\"/wazuh-indexer-certs /wazuh-dashboard-certs /wazuh-manager-certs\"\n\nfor dest in $destinations; \ndo \n  # Extract the second word using cut and store it in a variable\n  service=$(echo \"${dest}\" | cut -d'-' -f2)\n\n  # Write root-ca\n  cat \"${source_dir}/general/root-ca.pem\" > \"${dest}/root-ca.pem\" ; \n\n  find \"${source_dir}/${service}\" -type f -exec sh -c 'cat \"$0\" > \"/wazuh-${1}-certs/$(basename \"$0\")\"' {} \"$service\" \\;\ndone\n\napk add openssl -q --no-interactive\n\nopenssl pkcs8 -topk8 -inform PEM -in /wazuh-indexer-certs/admin-key.pem -out /wazuh-indexer-certs/admin.key -nocrypt\n\nmkdir -p /tmp/wazuh/conf\ncp -r /bad-ownership-conf/* /tmp/wazuh/conf\n\n# Set UMASK so newly created file will have permissions 600\numask 177\n\n# Source directory\nsource_dir=\"/tmp/wazuh/conf\"\n\n# Destination directories\ndestinations=\"/wazuh-indexer-conf /wazuh-dashboard-conf /wazuh-manager-conf\"\n\nfor dest in $destinations; \ndo \n  # Extract the second word using cut and store it in a variable\n  service=$(echo \"${dest}\" | cut -d'-' -f2)\n\n  find \"${source_dir}/${service}\" -type f -exec sh -c 'cat \"$0\" > \"/wazuh-${1}-conf/$(basename \"$0\")\"' {} \"$service\" \\;\ndone\n\nchown -R 1000:1000 /wazuh-*\n\necho \"Indexer:\" && \\\necho \"    Cert:\" && \\\nls -la /wazuh-indexer-certs/ && \\\n\necho \"Dashboard:\" && \\\necho \"    Cert:\" && \\\nls -la /wazuh-dashboard-certs/ && \\\n\necho \"Manager:\" && \\\necho \"    Cert:\" && \\\nls -la /wazuh-manager-certs/"
+          volumeMounts:
+            - name: admin-certs-tmp
+              mountPath: /bad-ownership-cert/indexer/admin
+              readOnly: false
+            - name: dashboard-certs
+              mountPath: /wazuh-dashboard-certs
+              readOnly: false
+            - name: dashboard-certs-tmp
+              mountPath: /bad-ownership-cert/dashboard
+              readOnly: false
+            - name: dashboard-opensearch-conf
+              mountPath: /wazuh-dashboard-conf
+              readOnly: false
+            - name: dashboard-opensearch-conf-secret
+              mountPath: /bad-ownership-conf/dashboard
+              readOnly: false
+            - name: indexer-certs
+              mountPath: /wazuh-indexer-certs
+              readOnly: false
+            - name: indexer-certs-tmp
+              mountPath: /bad-ownership-cert/indexer/node
+              readOnly: false
+            - name: indexer-conf-secret
+              mountPath: /bad-ownership-conf/indexer
+              readOnly: false
+            - name: indexer-opensearch-conf
+              mountPath: /wazuh-indexer-conf
+              readOnly: false
+            - name: manager-certs
+              mountPath: /wazuh-manager-certs
+              readOnly: false
+            - name: manager-certs-tmp
+              mountPath: /bad-ownership-cert/manager
+              readOnly: false
+            - name: manager-conf
+              mountPath: /wazuh-manager-conf
+              readOnly: false
+            - name: manager-conf-secret
+              mountPath: /bad-ownership-conf/manager
+              readOnly: false
+            - name: root-ca
+              mountPath: /bad-ownership-cert/general
+              readOnly: false
+          
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits: 
+              cpu: 4000m 
+              memory: 8Gi
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add:
+                - CHOWN
+                - SETUID
+                - SETGID
+                - FOWNER
+                - DAC_OVERRIDE
+              drop:
+                - ALL
+          env:
+            - name: "TZ"
+              value: "UTC"
+            - name: "UMASK"
+              value: "0022"
+            - name: "UMASK_SET"
+              value: "0022"
+            - name: "PUID"
+              value: "568"
+            - name: "USER_ID"
+              value: "568"
+            - name: "UID"
+              value: "568"
+            - name: "PGID"
+              value: "1000"
+            - name: "GROUP_ID"
+              value: "1000"
+            - name: "GID"
+              value: "1000"
+      volumes:
+        - name: admin-certs-tmp
+          secret:
+            secretName: wazuh-admin-cert
+            optional: false
+            items:
+            - key: tls.key
+              path: admin-key.pem
+            - key: tls.crt
+              path: admin.pem
+        - name: dashboard-certs
+          persistentVolumeClaim:
+            claimName: wazuh-dashboard-certs
+        - name: dashboard-certs-tmp
+          secret:
+            secretName: wazuh-dashboard-cert
+            optional: false
+            items:
+            - key: tls.key
+              path: wazuh-dashboard-key.pem
+            - key: tls.crt
+              path: wazuh-dashboard.pem
+        - name: dashboard-config
+          persistentVolumeClaim:
+            claimName: wazuh-dashboard-config
+        - name: dashboard-custom
+          persistentVolumeClaim:
+            claimName: wazuh-dashboard-custom
+        - name: dashboard-opensearch-conf
+          persistentVolumeClaim:
+            claimName: wazuh-dashboard-opensearch-conf
+        - name: dashboard-opensearch-conf-secret
+          configMap:
+            name: wazuh-dashboard-conf
+            optional: false
+            items:
+            - key: wazuh.yml
+              path: wazuh.yml
+            - key: opensearch_dashboards.yml
+              path: opensearch_dashboards.yml
+        - name: indexer-certs
+          persistentVolumeClaim:
+            claimName: wazuh-indexer-certs
+        - name: indexer-certs-tmp
+          secret:
+            secretName: wazuh-node-cert
+            optional: false
+            items:
+            - key: tls.key
+              path: wazuh.indexer.key
+            - key: tls.crt
+              path: wazuh.indexer.pem
+        - name: indexer-conf-secret
+          configMap:
+            name: wazuh-indexer-conf
+            optional: false
+            items:
+            - key: wazuh.indexer.yml
+              path: opensearch.yml
+            - key: internal_users.yml
+              path: internal_users.yml
+        - name: indexer-opensearch-conf
+          persistentVolumeClaim:
+            claimName: wazuh-indexer-opensearch-conf
+        - name: manager-certs
+          persistentVolumeClaim:
+            claimName: wazuh-manager-certs
+        - name: manager-certs-tmp
+          secret:
+            secretName: wazuh-filebeat-cert
+            optional: false
+            items:
+            - key: tls.key
+              path: filebeat.key
+            - key: tls.crt
+              path: filebeat.pem
+        - name: manager-conf
+          persistentVolumeClaim:
+            claimName: wazuh-manager-conf
+        - name: manager-conf-secret
+          configMap:
+            name: wazuh-manager-conf
+            optional: false
+        - name: root-ca
+          secret:
+            secretName: wazuh-root-ca
+            optional: false
+            items:
+            - key: tls.crt
+              path: root-ca.pem
+---
+# Source: wazuh/templates/common.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wazuh-manager
+  namespace: ix-wazuh
+  labels:
+    app: "wazuh-0.0.1"
+    app.kubernetes.io/instance: "wazuh"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "wazuh"
+    app.kubernetes.io/version: "4.7.2"
+    helm-revision: "1"
+    helm.sh/chart: "wazuh-0.0.1"
+    release: "wazuh"
+spec:  
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      pod.name: manager
+      app.kubernetes.io/name: wazuh
+      app.kubernetes.io/instance: wazuh
+  template:
+    metadata:
+      labels:
+        app: "wazuh-0.0.1"
+        app.kubernetes.io/instance: "wazuh"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/name: "wazuh"
+        app.kubernetes.io/version: "4.7.2"
+        helm-revision: "1"
+        helm.sh/chart: "wazuh-0.0.1"
+        pod.lifecycle: "permanent"
+        pod.name: "manager"
+        release: "wazuh"
+      annotations:
+        rollme: "gvp18"
+    spec:
+      serviceAccountName: default
+      automountServiceAccountToken: false
+      runtimeClassName: 
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      shareProcessNamespace: false
+      enableServiceLinks: false
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      topologySpreadConstraints:
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "truecharts.org/rack"
+          labelSelector:
+            matchLabels:      
+              pod.name: manager
+              app.kubernetes.io/name: wazuh
+              app.kubernetes.io/instance: wazuh
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "kubernetes.io/hostname"
+          labelSelector:
+            matchLabels:      
+              pod.name: manager
+              app.kubernetes.io/name: wazuh
+              app.kubernetes.io/instance: wazuh
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+        sysctls:
+          - name: "net.ipv4.ip_unprivileged_port_start"
+            value: "514"
+      hostUsers: true
+      containers:
+        - name: wazuh
+          image: wazuh/wazuh-manager:4.7.2@sha256:238c2f30c4a677e57467eaac5794be579d3ca6a58e4fc7dd54d470bce267f4c0
+          imagePullPolicy: IfNotPresent
+          tty: false
+          stdin: false
+          ports:
+            - name: agent-connect
+              containerPort: 1514
+              protocol: TCP
+              hostPort: null
+            - name: agent-enroll
+              containerPort: 1515
+              protocol: TCP
+              hostPort: null
+            - name: api
+              containerPort: 55000
+              protocol: TCP
+              hostPort: null
+            - name: syslog-collect
+              containerPort: 514
+              protocol: UDP
+              hostPort: null
+          volumeMounts:
+            - name: manager-active-response
+              mountPath: /var/ossec/active-response/bin
+              readOnly: false
+            - name: manager-agentless
+              mountPath: /var/ossec/agentless
+              readOnly: false
+            - name: manager-api-configuration
+              mountPath: /var/ossec/api/configuration
+              readOnly: false
+            - name: manager-certs
+              mountPath: /etc/ssl/
+              readOnly: false
+            - name: manager-conf
+              mountPath: /wazuh-config-mount/etc/
+              readOnly: false
+            - name: manager-etc
+              mountPath: /var/ossec/etc
+              readOnly: false
+            - name: manager-filebeat-etc
+              mountPath: /etc/filebeat
+              readOnly: false
+            - name: manager-filebeat-var
+              mountPath: /var/lib/filebeat
+              readOnly: false
+            - name: manager-integrations
+              mountPath: /var/ossec/integrations
+              readOnly: false
+            - name: manager-logs
+              mountPath: /var/ossec/logs
+              readOnly: false
+            - name: manager-queue
+              mountPath: /var/ossec/queue
+              readOnly: false
+            - name: manager-var-multigroups
+              mountPath: /var/ossec/var/multigroups
+              readOnly: false
+            - name: manager-wodles
+              mountPath: /var/ossec/wodles
+              readOnly: false
+          livenessProbe:
+            tcpSocket:
+              port: 55000
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 55000
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 2
+            timeoutSeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 55000
+            initialDelaySeconds: 10
+            failureThreshold: 60
+            successThreshold: 1
+            timeoutSeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits: 
+              cpu: 4000m 
+              memory: 8Gi
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add:
+                - SYS_CHROOT
+                - KILL
+                - NET_BIND_SERVICE
+                - CHOWN
+                - SETUID
+                - SETGID
+                - FOWNER
+                - DAC_OVERRIDE
+              drop:
+                - ALL
+          envFrom:
+            - configMapRef:
+                name: "wazuh-manager-env"
+            - secretRef:
+                name: "wazuh-manager-env"
+          env:
+            - name: "TZ"
+              value: "UTC"
+            - name: "UMASK"
+              value: "0022"
+            - name: "UMASK_SET"
+              value: "0022"
+            - name: "PUID"
+              value: "568"
+            - name: "USER_ID"
+              value: "568"
+            - name: "UID"
+              value: "568"
+            - name: "PGID"
+              value: "1000"
+            - name: "GROUP_ID"
+              value: "1000"
+            - name: "GID"
+              value: "1000"
+      volumes:
+        - name: manager-active-response
+          persistentVolumeClaim:
+            claimName: wazuh-manager-active-response
+        - name: manager-agentless
+          persistentVolumeClaim:
+            claimName: wazuh-manager-agentless
+        - name: manager-api-configuration
+          persistentVolumeClaim:
+            claimName: wazuh-manager-api-configuration
+        - name: manager-certs
+          persistentVolumeClaim:
+            claimName: wazuh-manager-certs
+        - name: manager-conf
+          persistentVolumeClaim:
+            claimName: wazuh-manager-conf
+        - name: manager-etc
+          persistentVolumeClaim:
+            claimName: wazuh-manager-etc
+        - name: manager-filebeat-etc
+          persistentVolumeClaim:
+            claimName: wazuh-manager-filebeat-etc
+        - name: manager-filebeat-var
+          persistentVolumeClaim:
+            claimName: wazuh-manager-filebeat-var
+        - name: manager-integrations
+          persistentVolumeClaim:
+            claimName: wazuh-manager-integrations
+        - name: manager-logs
+          persistentVolumeClaim:
+            claimName: wazuh-manager-logs
+        - name: manager-queue
+          persistentVolumeClaim:
+            claimName: wazuh-manager-queue
+        - name: manager-var-multigroups
+          persistentVolumeClaim:
+            claimName: wazuh-manager-var-multigroups
+        - name: manager-wodles
+          persistentVolumeClaim:
+            claimName: wazuh-manager-wodles
+
+NOTES:
+# Thank you for installing wazuh by TrueCharts.
+
+
+
+## Sources for wazuh
+- https://github.com/wazuh/wazuh
+- https://github.com/truecharts/charts/tree/master/charts/stable/wazuh
+- https://hub.docker.com/r/wazuh/wazuh-indexer
+
+See more for **wazuh** at (https://truecharts.org/charts/stable/wazuh)
+
+## Documentation
+Please check out the TrueCharts documentation on:
+https://truecharts.org
+
+OpenSource can only exist with your help, please consider supporting TrueCharts:
+https://truecharts.org/sponsor

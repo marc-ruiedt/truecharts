@@ -1,16 +1,9 @@
 {{- define "wazuh.persistence" -}}
+
+{{- $certTmpMountPath := "/bad-ownership-cert" -}}
+{{- $confTmpMountPath := "/bad-ownership-conf" -}}
+
 persistence:
-
-## ======= Debug ======= ##
-# ===== PVC ===== #
-
-  # config:
-  #   enabled: true
-  #   mountPath: /config
-  #   targetSelector:
-  #     manager:
-  #       codeserver:
-  #         mountPath: "/var/lib/wazuh-indexer"
 
 ## ======= General ======= ##
 # ===== Secret ===== #
@@ -26,90 +19,7 @@ persistence:
     targetSelector:
       main:
         init-perms:
-          mountPath: /bad-ownership-cert/general
-
-## ======= Wazuh Indexer ======= ##
-# ===== PVC ===== #
-
-  indexer:
-    enabled: true
-    readOnly: false
-    # defaultMode: "0600"
-    targetSelector:
-      indexer:
-        indexer:
-          mountPath: "/var/lib/wazuh-indexer"
-
-  indexer-opensearch-conf:
-    enabled: true
-    readOnly: false
-    targetSelector:
-      main:
-        init-perms:
-          mountPath: /wazuh-indexer-conf
-      indexer:
-        indexer:
-          mountPath: /wazuh-config
-        init-credentials:
-          mountPath: /wazuh-config
-
-  indexer-certs:
-    enabled: true
-    readOnly: false
-    targetSelector:
-      main:
-        init-perms:
-          mountPath: /wazuh-indexer-certs
-      indexer:
-        indexer:
-          mountPath: /usr/share/wazuh-indexer/certs
-
-# ===== Secret ===== #
-
-  indexer-certs-tmp:
-    enabled: true
-    type: secret
-    objectName: node-cert
-    readOnly: false
-    items:
-      - key: tls.key
-        path: wazuh.indexer.key
-      - key: tls.crt
-        path: wazuh.indexer.pem
-    targetSelector:
-      main:
-        init-perms:
-          mountPath: /bad-ownership-cert/indexer/node
-
-  admin-certs-tmp:
-    enabled: true
-    type: secret
-    objectName: admin-cert
-    readOnly: false
-    items:
-      - key: tls.key
-        path: admin-key.pem
-      - key: tls.crt
-        path: admin.pem
-    targetSelector:
-      main:
-        init-perms:
-          mountPath: /bad-ownership-cert/indexer/admin
-
-  indexer-conf-secret:
-    enabled: true
-    type: configmap
-    objectName: indexer-conf
-    readOnly: false
-    items:
-      - key: wazuh.indexer.yml
-        path: opensearch.yml
-      - key: internal_users.yml
-        path: internal_users.yml
-    targetSelector:
-      main:
-        init-perms:
-          mountPath: /bad-ownership-conf/indexer
+          mountPath: {{ $certTmpMountPath }}/general
 
 ## ======= Wazuh Dashboard ======= ##
 # ===== PVC ===== #
@@ -167,7 +77,7 @@ persistence:
     targetSelector:
       main:
         init-perms:
-          mountPath: /bad-ownership-cert/dashboard
+          mountPath: {{ $certTmpMountPath }}/dashboard
           
   dashboard-opensearch-conf-secret:
     enabled: true
@@ -182,7 +92,90 @@ persistence:
     targetSelector:
       main:
         init-perms:
-          mountPath: /bad-ownership-conf/dashboard
+          mountPath: {{ $confTmpMountPath }}/dashboard
+
+## ======= Wazuh Indexer ======= ##
+# ===== PVC ===== #
+
+  indexer:
+    enabled: true
+    readOnly: false
+    # defaultMode: "0600"
+    targetSelector:
+      indexer:
+        indexer:
+          mountPath: "/var/lib/wazuh-indexer"
+
+  indexer-opensearch-conf:
+    enabled: true
+    readOnly: false
+    targetSelector:
+      main:
+        init-perms:
+          mountPath: /wazuh-indexer-conf
+      indexer:
+        indexer:
+          mountPath: /wazuh-config
+        init-credentials:
+          mountPath: /wazuh-config
+
+  indexer-certs:
+    enabled: true
+    readOnly: false
+    targetSelector:
+      main:
+        init-perms:
+          mountPath: /wazuh-indexer-certs
+      indexer:
+        indexer:
+          mountPath: /usr/share/wazuh-indexer/certs
+
+# ===== Secret ===== #
+
+  indexer-certs-tmp:
+    enabled: true
+    type: secret
+    objectName: node-cert
+    readOnly: false
+    items:
+      - key: tls.key
+        path: wazuh.indexer.key
+      - key: tls.crt
+        path: wazuh.indexer.pem
+    targetSelector:
+      main:
+        init-perms:
+          mountPath: {{ $certTmpMountPath }}/indexer/node
+
+  admin-certs-tmp:
+    enabled: true
+    type: secret
+    objectName: admin-cert
+    readOnly: false
+    items:
+      - key: tls.key
+        path: admin-key.pem
+      - key: tls.crt
+        path: admin.pem
+    targetSelector:
+      main:
+        init-perms:
+          mountPath: {{ $certTmpMountPath }}/indexer/admin
+
+  indexer-conf-secret:
+    enabled: true
+    type: configmap
+    objectName: indexer-conf
+    readOnly: false
+    items:
+      - key: wazuh.indexer.yml
+        path: opensearch.yml
+      - key: internal_users.yml
+        path: internal_users.yml
+    targetSelector:
+      main:
+        init-perms:
+          mountPath: {{ $confTmpMountPath }}/indexer
 
 ## ======= Wazuh Manager ======= ##
 # ===== PVC ===== #
@@ -327,7 +320,7 @@ persistence:
     targetSelector:
       main:
         init-perms:
-          mountPath: /bad-ownership-cert/manager
+          mountPath: {{ $certTmpMountPath }}/manager
 
   manager-conf-secret:
     enabled: true
@@ -337,5 +330,5 @@ persistence:
     targetSelector:
       main:
         init-perms:
-          mountPath: /bad-ownership-conf/manager
+          mountPath: {{ $confTmpMountPath }}/manager
 {{- end -}}

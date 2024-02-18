@@ -1,16 +1,12 @@
 {{- define "wazuh.init.perms" -}}
 {{- $uid := .Values.securityContext.container.runAsUser -}}
 {{- $gid := .Values.securityContext.container.runAsGroup -}}
-{{- $fsGroup := .Values.securityContext.container.fsGroup -}}
 enabled: true
+primary: true
 type: install
 imageSelector: alpineImage
 securityContext:
   runAsUser: 0
-  runAsGroup: {{ $gid }}
-  runAsNonRoot: true
-  readOnlyRootFilesystem: false
-  fsGroup: {{ $fsGroup }}
 command: /bin/sh
 args:
   - -c

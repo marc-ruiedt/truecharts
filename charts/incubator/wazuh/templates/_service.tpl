@@ -4,10 +4,12 @@ service:
 
   main:
     enabled: true
+    primary: true
     targetSelector: main
     type: LoadBalancer
     ports:
       main:
+        primary: true
         enabled: true
         port: 443
         protocol: tcp
@@ -55,11 +57,5 @@ service:
         protocol: tcp
         targetPort: 55000
         targetSelector: manager
-      # codeserver:
-      #   enabled: true
-      #   port: 10063
-      #   protocol: http
-      #   targetPort: 8080
-      #   targetSelector: codeserver
 
 {{- end -}}
