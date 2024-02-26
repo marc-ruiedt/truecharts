@@ -47,17 +47,3 @@ secret:
       API_USERNAME: {{ .Values.wazuh.outposts.manager.username | quote }}
       API_PASSWORD: {{ .Values.wazuh.outposts.manager.password | quote }}
 {{- end }}
-## ===== ##
-# {{- define "wordpress.fetch" -}}
-#   {{- $var := .var -}}
-#   {{- $secret := .secret -}}
-#   {{- $ns := .ns -}}
-#   {{- $ret := randAlphaNum 32 -}}
-
-#   {{- with (lookup "v1" "Secret" $ns $secret) -}}
-#     {{- $ret = index .data $var | b64dec -}}
-#   {{- end -}}
-
-#   {{- $ret -}}
-
-# {{- end -}}
