@@ -3,26 +3,34 @@
 
 {{- $fullName := (include "tc.v1.common.lib.chart.names.fullname" $) -}}
 {{- $namespace := (include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $ "objectData" . "caller" "Configmap")) -}}
-{{- $fqdn := (include "tc.v1.common.lib.chart.names.fqdn" $) -}}
-{{- $dashboardUrl := printf "%s.svc.cluster.local" $fqdn -}}
-{{- $managerUrl := printf "%s-manager.%s.svc.cluster.local" $fullName $namespace -}}
-{{- $indexerUrl := printf "%s-indexer.%s.svc.cluster.local" $fullName $namespace -}}
+{{- $managerUrl := printf "https://%s-manager.%s.svc.cluster.local" $fullName $namespace -}}
+{{- $indexerNodeName := printf "%s-indexer" $fullName -}}
 {{- $indexerPort := printf "%v" .Values.service.indexer.ports.indexer.port -}}
-{{- $dashboardPort := printf "%v" .Values.service.main.ports.main.port -}}
+{{- $indexerUrl := printf "https://%s.%s.svc.cluster.local:%v" $indexerNodeName $namespace $indexerPort -}}
 
 configmap:
   dashboard-env:
     enabled: true
     data:
+      INDEXER_URL: {{ $indexerUrl | quote }}
+      SERVER_SSL_ENABLED: "true"
+      SERVER_SSL_CERTIFICATE: "/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem"
+      SERVER_SSL_KEY: "/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem"
       WAZUH_API_URL: {{ $managerUrl | quote }}
   indexer-env:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
     data:
-      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m"
+      OPENSEARCH_JAVA_OPTS: "-Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true"
+      CLUSTER_NAME: {{ $fullName | quote }}
+      NETWORK_HOST: "0.0.0.0"
+      NODE_NAME: {{ $indexerNodeName }}
+      DISCOVERY_SERVICE: "wazuh-indexer"
+      KUBERNETES_NAMESPACE: {{ $namespace | quote }}
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
   manager-env:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     data:
-      INDEXER_URL: {{ printf "%s:%v" $indexerUrl $indexerPort | quote }}
+      INDEXER_URL: {{ $indexerUrl | quote }}
       FILEBEAT_SSL_VERIFICATION_MODE: "full"
       SSL_CERTIFICATE_AUTHORITIES: "/etc/ssl/root-ca.pem"
       SSL_CERTIFICATE: "/etc/ssl/filebeat.pem"
@@ -40,7 +48,7 @@ secret:
       API_USERNAME: {{ .Values.wazuh.outposts.manager.username | quote }}
       API_PASSWORD: {{ .Values.wazuh.outposts.manager.password | quote }}
   manager-env:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     data:
       INDEXER_USERNAME: {{ .Values.wazuh.outposts.indexer.username | quote }}
       INDEXER_PASSWORD: {{ .Values.wazuh.outposts.indexer.password | quote }}

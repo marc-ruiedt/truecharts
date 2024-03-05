@@ -53,13 +53,13 @@ secret:
       password: {{ $dashboardPassword | quote }}
 
   indexer-credentials:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
     data:
       username: {{ $indexerUsername | quote }}
       password: {{ $indexerPassword | quote }}
 
   manager-credentials:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     data:
       username: {{ $managerUsername | quote }}
       password: {{ $managerPassword | quote }}
@@ -72,14 +72,14 @@ secret:
       tls.crt: {{ $rootCA.Cert | quote }}
 
   admin-cert:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
     type: kubernetes.io/tls
     data:
       tls.key: {{ $adminCert.Key | quote }}
       tls.crt: {{ $adminCert.Cert | quote }}
 
   node-cert:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
     type: kubernetes.io/tls
     data:
       tls.key: {{ $nodeCert.Key | quote }}
@@ -93,7 +93,7 @@ secret:
       tls.crt: {{ $dashboardCert.Cert | quote }}
 
   filebeat-cert:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     type: kubernetes.io/tls
     data:
       tls.key: {{ $filebeatCert.Key | quote }}

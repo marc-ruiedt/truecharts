@@ -21,7 +21,7 @@
 
 configmap:
   indexer-conf:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
     data:
       internal_users.yml: |
         ---
@@ -91,7 +91,7 @@ configmap:
         opensearch.ssl.certificateAuthorities: ["/usr/share/wazuh-dashboard/certs/root-ca.pem"]
         uiSettings.overrides.defaultRoute: /app/wazuh
   manager-conf:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     data:
       wazuh_manager.conf: |
         <ossec_config>

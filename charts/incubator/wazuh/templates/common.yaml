@@ -7,13 +7,17 @@
 {{- $persistence := (include "wazuh.persistence" . | fromYaml) }}
 {{- $_ := set .Values "persistence" $persistence.persistence -}}
 
-{{/* Add service */}}
-{{- $service := (include "wazuh.service" . | fromYaml) }}
-{{- $_ := set .Values "service" $service.service -}}
+{{/* Disable [Indexer] if requested */}}
+{{- if not .Values.wazuh.outposts.indexer.enabled -}}
+  {{- $_ := set .Values.workload.indexer "enabled" false -}}
+  {{- $_ := set .Values.service.indexer "enabled" false -}}
+{{- end -}}
 
-{{/* Add portal */}}
-{{- $portal := (include "wazuh.portal" . | fromYaml) }}
-{{- $_ := set .Values "portal" $portal.portal -}}
+{{/* Disable [Manager] if requested */}}
+{{- if not .Values.wazuh.outposts.manager.enabled -}}
+  {{- $_ := set .Values.workload.manager "enabled" false -}}
+  {{- $_ := set .Values.service.manager "enabled" false -}}
+{{- end -}}
 
 {{/* ==== ConfigMap and Secret ===== */}}
 
@@ -72,12 +76,30 @@
 {{- $_ := set .Values.workload.main.podSpec.initContainers "init-perms" $initPerms -}}
 
 {{/* Add [init credentials] container to wazuh */}}
-{{- if not (get .Values.workload.indexer.podSpec "initContainers") -}}
-  {{- $_ := set .Values.workload.indexer.podSpec "initContainers" dict -}}
+{{- if .Values.wazuh.outposts.indexer.enabled -}}
+  {{- if not (get .Values.workload.indexer.podSpec "initContainers") -}}
+    {{- $_ := set .Values.workload.indexer.podSpec "initContainers" dict -}}
+  {{- end -}}
+
+  {{- $initCredentials := (include "wazuh.init.credentials" . | fromYaml) -}}
+  {{- $_ := set .Values.workload.indexer.podSpec.initContainers "init-credentials" $initCredentials -}}
 {{- end -}}
 
-{{- $initCredentials := (include "wazuh.init.credentials" . | fromYaml) -}}
-{{- $_ := set .Values.workload.indexer.podSpec.initContainers "init-credentials" $initCredentials -}}
+{{/* Add [wait-indexer] container to wazuh */}}
+{{- if .Values.wazuh.outposts.indexer.enabled -}}
+  {{- if not (get .Values.workload.manager.podSpec "initContainers") -}}
+    {{- $_ := set .Values.workload.manager.podSpec "initContainers" dict -}}
+  {{- end -}}
+
+  {{- if not (get .Values.workload.main.podSpec "initContainers") -}}
+    {{- $_ := set .Values.workload.main.podSpec "initContainers" dict -}}
+  {{- end -}}
+
+  {{- $waitIndexer := (include "wazuh.init.waitindexer" . | fromYaml) -}}
+
+  {{- $_ := set .Values.workload.manager.podSpec.initContainers "wait-indexer" $waitIndexer -}}
+  {{- $_ := set .Values.workload.main.podSpec.initContainers "wait-indexer" $waitIndexer -}}
+{{- end -}}
 
 {{/* Render the templates */}}
 {{- include "tc.v1.common.loader.apply" . -}}

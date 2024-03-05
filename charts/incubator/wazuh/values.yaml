@@ -12,6 +12,10 @@ dashboardImage:
   repository: wazuh/wazuh-dashboard
   pullPolicy: IfNotPresent
   tag: 4.7.2@sha256:7564058b4e00b1fdb39da9faa232d99addc611dcbd04ef559df5387d4eda8740
+busyboxImage:
+  repository: busybox
+  tag: latest
+  pullPolicy: IfNotPresent
 alpineImage:
   repository: alpine
   tag: latest
@@ -23,27 +27,48 @@ wazuh:
   credentials:
     # Only works on initial install
     username: "kibanaserver" # Do not modify this username as it may make your Wazuh installation unstable.
-    password: "test02"
+    password: "kibanaserver"
   outposts:
     indexer:
       enabled: true
       # Only works on initial install
       username: "admin" # Do not modify this username as it may make your Wazuh installation unstable.
-      password: "test"
+      password: "SecretPassword"
     manager:
       enabled: true
       # Only works on initial install
       username: "wazuh-wui" # Do not modify this username as it may make your Wazuh installation unstable.
-      password: "MyS3cr37P450r.*-1dsfs84f"
+      password: "MyS3cr37P450r.*-"
 
 # ==== Workload ==== #
 
 workload:
+# ==== Debug Container ==== #
+  debug:
+    enabled: true
+    type: Deployment
+    strategy: Recreate
+    replicas: 1
+    podSpec:
+      containers:
+        debug:
+          enabled: true
+          primary: true
+          imageSelector : alpineImage
+          command: ["sh"]
+          stdin: true
+          tty: true
+          probes:
+            liveness:
+              enabled: false
+            readiness:
+              enabled: false
+            startup:
+              enabled: false
 # ==== Wazuh Dashboard Deployment ==== #
   main:
     enabled: true
     type: Deployment
-    strategy: RollingUpdate
     replicas: 1
     primary: true
     podSpec:
@@ -62,8 +87,7 @@ workload:
 # ==== Wazuh Indexer Deployment ==== #
   indexer:
     enabled: true
-    type: Deployment
-    strategy: RollingUpdate
+    type: StatefulSet
     replicas: 1
     podSpec:
       containers:
@@ -79,8 +103,7 @@ workload:
 # ==== Wazuh Manager Deployment ==== #
   manager:
     enabled: true
-    type: Deployment
-    strategy: RollingUpdate
+    type: StatefulSet
     replicas: 1
     podSpec:
       containers:
@@ -108,6 +131,64 @@ workload:
                 - SYS_CHROOT
                 - KILL
 
+service:
+# ==== Wazuh Dashboard Service ==== #
+  main:
+    enabled: true
+    primary: true
+    targetSelector: main
+    type: LoadBalancer
+    ports:
+      main:
+        primary: true
+        enabled: true
+        port: 443
+        protocol: https
+        targetPort: 5601
+        targetSelector: main
+# ==== Wazuh Indexer Service ==== #
+  indexer:
+    enabled: true
+    targetSelector: indexer
+    type: ClusterIP
+    ports:
+      indexer:
+        enabled: true
+        port: 9200
+        protocol: https
+        targetPort: 9200
+        targetSelector: indexer
+# ==== Wazuh Manager Service ==== #
+  manager:
+    enabled: true
+    targetSelector: manager
+    type: LoadBalancer
+    ports:
+      agent-connect:
+        enabled: true
+        port: 1514
+        protocol: https
+        targetPort: 1514
+        targetSelector: manager
+      agent-enroll:
+        enabled: true
+        port: 1515
+        protocol: https
+        targetPort: 1515
+        targetSelector: manager
+      syslog-collect:
+        enabled: true
+        port: 514
+        protocol: udp
+        targetPort: 514
+        targetSelector: manager
+      api:
+        enabled: true
+        port: 55000
+        protocol: https
+        targetPort: 55000
+        targetSelector: manager
+
 # ==== Security Context ==== #
 
 securityContext:
@@ -119,3 +200,7 @@ securityContext:
     readOnlyRootFilesystem: false
   pod:
     fsGroup: 1000
+
+portal:
+  open:
+    enabled: false

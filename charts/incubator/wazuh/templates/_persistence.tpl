@@ -2,6 +2,7 @@
 
 {{- $certTmpMountPath := "/bad-ownership-cert" -}}
 {{- $confTmpMountPath := "/bad-ownership-conf" -}}
+{{- $indexerCertMountPath := "/usr/share/wazuh-indexer/certs" -}}
 
 persistence:
 
@@ -10,9 +11,10 @@ persistence:
 
   root-ca:
     enabled: true
+    readOnly: false
+    defaultMode: "0600"
     type: secret
     objectName: root-ca
-    readOnly: false
     items:
       - key: tls.crt
         path: root-ca.pem
@@ -27,7 +29,7 @@ persistence:
   dashboard-config:
     enabled: true
     readOnly: false
-    # defaultMode: "0600"
+    defaultMode: "0600"
     targetSelector:
       main:
         main:
@@ -36,7 +38,7 @@ persistence:
   dashboard-custom:
     enabled: true
     readOnly: false
-    # defaultMode: "0600"
+    defaultMode: "0600"
     targetSelector:
       main:
         main:
@@ -45,6 +47,7 @@ persistence:
   dashboard-opensearch-conf:
     enabled: true
     readOnly: false
+    defaultMode: "0600"
     targetSelector:
       main:
         main:
@@ -55,6 +58,7 @@ persistence:
   dashboard-certs:
     enabled: true
     readOnly: false
+    defaultMode: "0600"
     targetSelector:
       main:
         init-perms:
@@ -66,9 +70,10 @@ persistence:
 
   dashboard-certs-tmp:
     enabled: true
+    readOnly: false
+    defaultMode: "0600"
     type: secret
     objectName: dashboard-cert
-    readOnly: false
     items:
       - key: tls.key
         path: wazuh-dashboard-key.pem
@@ -81,9 +86,10 @@ persistence:
           
   dashboard-opensearch-conf-secret:
     enabled: true
+    readOnly: false
+    defaultMode: "0600"
     type: configmap
     objectName: dashboard-conf
-    readOnly: false
     items:
       - key: wazuh.yml
         path: wazuh.yml
@@ -98,17 +104,15 @@ persistence:
 # ===== PVC ===== #
 
   indexer:
-    enabled: true
-    readOnly: false
-    # defaultMode: "0600"
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
+    accessModes: ReadWriteOnce
     targetSelector:
       indexer:
         indexer:
           mountPath: "/var/lib/wazuh-indexer"
 
   indexer-opensearch-conf:
-    enabled: true
-    readOnly: false
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
     targetSelector:
       main:
         init-perms:
@@ -120,23 +124,23 @@ persistence:
           mountPath: /wazuh-config
 
   indexer-certs:
-    enabled: true
-    readOnly: false
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
     targetSelector:
       main:
         init-perms:
           mountPath: /wazuh-indexer-certs
       indexer:
         indexer:
-          mountPath: /usr/share/wazuh-indexer/certs
+          mountPath: {{ $indexerCertMountPath }}
 
 # ===== Secret ===== #
 
   indexer-certs-tmp:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
+    defaultMode: "0600"
+    readOnly: false
     type: secret
     objectName: node-cert
-    readOnly: false
     items:
       - key: tls.key
         path: wazuh.indexer.key
@@ -148,10 +152,11 @@ persistence:
           mountPath: {{ $certTmpMountPath }}/indexer/node
 
   admin-certs-tmp:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
+    readOnly: false
+    defaultMode: "0600"
     type: secret
     objectName: admin-cert
-    readOnly: false
     items:
       - key: tls.key
         path: admin-key.pem
@@ -163,10 +168,11 @@ persistence:
           mountPath: {{ $certTmpMountPath }}/indexer/admin
 
   indexer-conf-secret:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
+    readOnly: false
+    defaultMode: "0600"
     type: configmap
     objectName: indexer-conf
-    readOnly: false
     items:
       - key: wazuh.indexer.yml
         path: opensearch.yml
@@ -181,8 +187,9 @@ persistence:
 # ===== PVC ===== #
 
   manager-certs:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
@@ -192,18 +199,18 @@ persistence:
           mountPath: /wazuh-manager-certs
 
   manager-api-configuration:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0600"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /var/ossec/api/configuration
 
   manager-etc:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
@@ -212,9 +219,9 @@ persistence:
           mountPath: /var/ossec/etc
 
   manager-logs:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
@@ -223,80 +230,81 @@ persistence:
           mountPath: /var/ossec/logs
 
   manager-queue:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /var/ossec/queue
 
   manager-var-multigroups:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /var/ossec/var/multigroups
 
   manager-integrations:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /var/ossec/integrations
 
   manager-active-response:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /var/ossec/active-response/bin
 
   manager-agentless:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /var/ossec/agentless
 
   manager-wodles:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /var/ossec/wodles
 
   manager-filebeat-etc:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /etc/filebeat
 
   manager-filebeat-var:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
-    # defaultMode: "0400"
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
           mountPath: /var/lib/filebeat
 
   manager-conf:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
     readOnly: false
+    defaultMode: "0600"
     targetSelector:
       manager:
         manager:
@@ -308,10 +316,11 @@ persistence:
 # ===== Secret ===== #
 
   manager-certs-tmp:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
+    readOnly: false
+    defaultMode: "0600"
     type: secret
     objectName: filebeat-cert
-    readOnly: false
     items:
       - key: tls.key
         path: filebeat.key
@@ -323,12 +332,14 @@ persistence:
           mountPath: {{ $certTmpMountPath }}/manager
 
   manager-conf-secret:
-    enabled: true
+    enabled: {{ .Values.wazuh.outposts.manager.enabled }}
+    readOnly: false
+    defaultMode: "0600"
     type: configmap
     objectName: manager-conf
-    readOnly: false
     targetSelector:
       main:
         init-perms:
           mountPath: {{ $confTmpMountPath }}/manager
+
 {{- end -}}

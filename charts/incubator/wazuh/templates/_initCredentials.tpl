@@ -1,6 +1,6 @@
 {{- define "wazuh.init.credentials" -}}
 
-enabled: true
+enabled: {{ .Values.wazuh.outposts.indexer.enabled }}
 primary: true
 type: install
 imageSelector: indexerImage
@@ -14,7 +14,7 @@ args:
     chmod +x /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh 
     export JAVA_HOME=/usr/share/wazuh-indexer/jdk
 
-    cat <<EOF > /wazuh-config/internal_users.yml
+    cat <<EOF >> /wazuh-config/internal_users.yml
 
     ---
     # This is the internal user database
@@ -38,9 +38,7 @@ args:
     {{ .Values.wazuh.credentials.username }}:
         hash: "$(echo $(bash /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh -p "{{ .Values.wazuh.credentials.password }}") | awk '{print $NF}')"
         reserved: true
-        backend_roles:
-        - "admin"
-        description: "Default admin user"
+        description: "Default dashboard user"
     EOF
 
     cat /wazuh-config/internal_users.yml
